@@ -28,6 +28,15 @@
             <column name="slug" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
+            <column name="invite_lifespan" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="inherit_global_idps" type="bool" defaultValue="true">
+                <constraints nullable="false" />
+            </column>
+            <column name="require_matching_identifier" type="bool">
+                <constraints nullable="true" />
+            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="tenant" baseColumnNames="realm_id" constraintName="fk_tenant_realm" referencedTableName="realm"

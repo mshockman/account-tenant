@@ -29,6 +29,9 @@
             <column name="mapper_type" type="identity_provider_mapper_type" defaultValue="claim_mapper">
                 <constraints nullable="false" />
             </column>
+            <column name="sync_mode" type="sync_mode_type">
+                <constraints nullable="true" />
+            </column>
             <column name="attribute" type="text">
                 <constraints nullable="false" />
             </column>

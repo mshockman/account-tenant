@@ -33,8 +33,14 @@
             <column name="email" type="varchar(320)">
                 <constraints nullable="true" />
             </column>
+            <column name="email_verified" type="bool" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
             <column name="phone" type="varchar(20)">
                 <constraints nullable="true" />
+            </column>
+            <column name="phone_verified" type="bool" defaultValueBoolean="false">
+                <constraints nullable="false" />
             </column>
             <column name="attributes" type="jsonb" defaultValue="{}">
                 <constraints nullable="false" />

@@ -5,6 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
     <changeSet id="5" author="Matthew Shockman">
+        <sql>
+            CREATE TYPE idp_type AS ENUM('OIDC');
+        </sql>
+        <sql>
+            CREATE TYPE sync_mode_type AS ENUM('ALWAYS', 'IS_BLANK', 'ON_LINK', 'NEVER');
+        </sql>
         <createTable tableName="identity_provider">
             <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" unique="true" />
@@ -18,10 +24,22 @@
             <column name="realm_id" type="uuid">
                 <constraints nullable="false" />
             </column>
-            <column name="name" type="varchar(100)">
-                <constraints nullable="false" />
+            <column name="tenant_id" type="uuid">
+                <constraints nullable="true" />
             </column>
             <column name="issuer" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="type" type="idp_type">
+                <constraints nullable="true" />
+            </column>
+            <column name="default_sync_mode" type="sync_mode_type">
+                <constraints nullable="true" />
+            </column>
+            <column name="config" type="jsonb" defaultValueComputed="'{}'::jsonb">
                 <constraints nullable="false" />
             </column>
         </createTable>
@@ -33,13 +51,47 @@
         <addForeignKeyConstraint baseTableName="identity_provider" baseColumnNames="realm_id" constraintName="fk_identity_provider_realm" referencedTableName="realm"
                                  referencedColumnNames="id" onDelete="CASCADE" />
 
-        <addUniqueConstraint tableName="identity_provider" columnNames="realm_id, name" constraintName="uq_identity_provider_name" />
-        <addUniqueConstraint tableName="identity_provider" columnNames="realm_id, issuer" constraintName="uq_identity_provider_issuer" />
+        <addForeignKeyConstraint baseTableName="identity_provider" baseColumnNames="tenant_id" constraintName="fk_identity_provider_tenant" referencedTableName="tenant"
+                                 referencedColumnNames="id" onDelete="CASCADE" />
+
+        <sql>
+            CREATE UNIQUE INDEX uq_identity_provider_realm_issuer ON "identity_provider" (realm_id, issuer) WHERE tenant_id IS NULL;
+        </sql>
+
+        <sql>
+            CREATE UNIQUE INDEX uq_identity_provider_realm_tenant_issuer ON "identity_provider" (realm_id, tenant_id, issuer) WHERE tenant_id IS NOT NULL;
+        </sql>
+
+        <sql>
+            ALTER TABLE identity_provider ADD CONSTRAINT name_set_if_tenant_null CHECK (
+                tenant_id is not null or name is not null
+                );
+        </sql>
+
+        <sql>
+            ALTER TABLE identity_provider ADD CONSTRAINT type_set_if_tenant_null CHECK (
+                tenant_id is not null OR type is not null
+                );
+        </sql>
+
+        <sql>
+            ALTER TABLE identity_provider ADD CONSTRAINT default_sync_mode_set_if_tenant_null CHECK (
+                tenant_id is not null OR default_sync_mode is not null
+                );
+        </sql>
 
         <rollback>
-            <dropUniqueConstraint tableName="identity_provider" constraintName="uq_identity_provider_name" />
-            <dropUniqueConstraint tableName="identity_provider" constraintName="uq_identity_provider_issuer" />
+            <dropIndex tableName="identity_provider" indexName="uq_identity_provider_realm_issuer" />
+            <dropIndex tableName="identity_provider" indexName="uq_identity_provider_realm_tenant_issuer" />
+            <dropForeignKeyConstraint baseTableName="identity_provider" constraintName="fk_identity_provider_tenant" />
+            <dropForeignKeyConstraint baseTableName="identity_provider" constraintName="fk_identity_provider_realm" />
             <dropTable tableName="identity_provider" />
+            <sql>
+                DROP TYPE idp_type;
+            </sql>
+            <sql>
+                DROP TYPE sync_mode_type;
+            </sql>
         </rollback>
     </changeSet>
 </databaseChangeLog>

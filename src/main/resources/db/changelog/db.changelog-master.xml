@@ -5,14 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
 
-    <include file="db/changelog/changeset-1-init.sql"/>
+    <include file="db/changelog/changeset-1-init.xml"/>
     <include file="db/changelog/changeset-2-realm.xml"/>
     <include file="db/changelog/changeset-3-tenant.xml"/>
-    <include file="db/changelog/changeset-4-user.xml"/>
+    <include file="db/changelog/changeset-4-account.xml"/>
     <include file="db/changelog/changeset-5-identity-provider.xml"/>
     <include file="db/changelog/changeset-6-identity.xml"/>
     <include file="db/changelog/changeset-7-identity-provider-mapper.xml"/>
-    <include file="db/changelog/changeset-8-user-identity-link.xml"/>
-    <include file="db/changelog/changeset-9-user-identity-link-request.xml"/>
+    <include file="db/changelog/changeset-8-account-identity-link.xml"/>
+    <include file="db/changelog/changeset-9-account-identity-link-request.xml"/>
 
 </databaseChangeLog>
