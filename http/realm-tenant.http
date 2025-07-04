@@ -1,0 +1,66 @@
+### Create new realm tenant
+POST http://localhost:8180/realms/test-realm/tenants
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Tenant",
+  "slug": "test-tenant",
+  "enabled": true
+}
+
+### Get Existing Realm Tenant
+GET http://localhost:8180/realms/test-realm/tenants/test-tenant
+Accept: application/json
+
+> {%
+    client.global.set("id", response.body.id)
+
+    client.test("All properties correct", function() {
+        client.assert(response.body.name == "Test Tenant")
+        client.assert(response.body.slug == "test-tenant")
+        client.assert(response.body.enabled == true)
+    })
+%}
+
+### Disable exising tenant
+PATCH http://localhost:8180/realms/test-realm/tenants/test-tenant
+Content-Type: application/json
+Accept: application/json
+
+{
+  "enabled": false
+}
+
+> {%
+    client.global.set("id", response.body.id)
+
+    client.test("All properties correct", function() {
+        client.assert(response.body.name == "Test Tenant")
+        client.assert(response.body.slug == "test-tenant")
+        client.assert(response.body.enabled == false)
+    })
+%}
+
+### Enable exising tenant
+PATCH http://localhost:8180/realms/test-realm/tenants/test-tenant
+Content-Type: application/json
+Accept: application/json
+
+{
+  "enabled": true
+}
+
+> {%
+    client.global.set("id", response.body.id)
+
+    client.test("All properties correct", function() {
+        client.assert(response.body.name == "Test Tenant")
+        client.assert(response.body.slug == "test-tenant")
+        client.assert(response.body.enabled == true)
+    })
+%}
+
+### Delete existing tenant
+DELETE http://localhost:8180/realms/test-realm/tenants/test-tenant
+

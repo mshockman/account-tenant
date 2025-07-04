@@ -1,0 +1,12 @@
+name: tenant-service
+
+services:
+  database:
+    image: postgres:16
+    container_name: tenant-service-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test1234
+      POSTGRES_DB: tenant-service-db
+    ports:
+      - "25432:5432"

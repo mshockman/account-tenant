@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
+
+    <changeSet id="2" author="Matthew Shockman">
+        <createTable tableName="realm">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="slug" type="varchar(50)">
+                <constraints nullable="false" unique="true" />
+            </column>
+        </createTable>
+
+        <sql>
+            CREATE TRIGGER updated_at_now BEFORE UPDATE ON "realm" FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+        </sql>
+
+        <rollback>
+            <dropTable tableName="realm" />
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,66 @@
+### Create a new realm
+POST http://localhost:8180/realms
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Realm2",
+  "slug": "test-realm2"
+}
+
+### Create new realm tenant
+POST http://localhost:8180/realms/test-realm2/tenants
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Tenant2",
+  "slug": "test-tenant2",
+  "enabled": true
+}
+
+### Create tenant user
+POST http://localhost:8180/realms/test-realm2/tenants/test-tenant2/accounts
+Content-Type: application/json
+Accept: application/json
+
+{
+  "enabled": true,
+  "username": "+17015550102",
+  "phone": "+17015550102",
+  "email": null,
+  "firstName": "Testy",
+  "lastName": "Testerson",
+  "attributes": {
+    "custom": "hello world"
+  }
+}
+
+> {%
+    client.global.set("id", response.body.id)
+%}
+
+
+### Update tenant user
+PATCH http://localhost:8180/realms/test-realm2/tenants/test-tenant2/accounts/{{id}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "enabled": true,
+  "username": "+17015550102",
+  "phone": "+17015550102",
+  "email": "test2@test.com",
+  "firstName": "Testy",
+  "lastName": "Testerson",
+  "attributes": {
+    "custom": "hello world"
+  }
+}
+
+### Get tenant user
+GET http://localhost:8180/realms/test-realm2/tenants/test-tenant2/accounts/{{id}}
+Accept: application/json
+
+### Delete tenant user
+DELETE http://localhost:8180/realms/test-realm2/tenants/test-tenant2/accounts/{{id}}

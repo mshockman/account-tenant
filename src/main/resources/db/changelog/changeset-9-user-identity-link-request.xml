@@ -1,0 +1,62 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
+    <changeSet id="9" author="Matthew Shockman">
+        <sql>
+            CREATE TYPE identity_link_request_type AS ENUM('email', 'phone');
+        </sql>
+
+        <sql>
+            CREATE type link_request_status as ENUM('pending', 'accepted', 'canceled');
+        </sql>
+
+        <createTable tableName="account_identity_link_request">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="account_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="request_type" type="identity_link_request_type">
+                <constraints nullable="false" />
+            </column>
+            <column name="expires" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="link_request_status" defaultValue="pending">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <sql>
+            CREATE TRIGGER updated_at_now BEFORE UPDATE ON "account_identity_link_request" FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+        </sql>
+
+        <addForeignKeyConstraint
+                baseTableName="account_identity_link_request"
+                baseColumnNames="account_id"
+                constraintName="fk_account_identity_link_request_account"
+                referencedTableName="account"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+        />
+
+        <rollback>
+            <dropTable tableName="account_identity_link_request" />
+            <sql>
+                DROP TYPE link_request_status;
+            </sql>
+            <sql>
+                DROP TYPE identity_link_request_type;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

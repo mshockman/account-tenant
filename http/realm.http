@@ -1,0 +1,25 @@
+### Create a new realm
+POST http://localhost:8180/realms
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Realm",
+  "slug": "test-realm"
+}
+
+### Get Existing Realm By Slug
+GET http://localhost:8180/realms/test-realm
+Accept: application/json
+
+> {%
+    client.global.set("id", response.body.id)
+
+    client.test("Name and slug correct", function() {
+        client.assert(response.body.name == "Test Realm")
+        client.assert(response.body.slug == "test-realm")
+    })
+%}
+
+### Deleting existing realm
+DELETE http://localhost:8180/realms?id={{id}}

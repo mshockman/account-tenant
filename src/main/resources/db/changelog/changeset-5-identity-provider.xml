@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
+    <changeSet id="5" author="Matthew Shockman">
+        <createTable tableName="identity_provider">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="realm_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="issuer" type="text">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <sql>
+            CREATE TRIGGER updated_at_now BEFORE UPDATE ON "identity_provider" FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+        </sql>
+
+        <addForeignKeyConstraint baseTableName="identity_provider" baseColumnNames="realm_id" constraintName="fk_identity_provider_realm" referencedTableName="realm"
+                                 referencedColumnNames="id" onDelete="CASCADE" />
+
+        <addUniqueConstraint tableName="identity_provider" columnNames="realm_id, name" constraintName="uq_identity_provider_name" />
+        <addUniqueConstraint tableName="identity_provider" columnNames="realm_id, issuer" constraintName="uq_identity_provider_issuer" />
+
+        <rollback>
+            <dropUniqueConstraint tableName="identity_provider" constraintName="uq_identity_provider_name" />
+            <dropUniqueConstraint tableName="identity_provider" constraintName="uq_identity_provider_issuer" />
+            <dropTable tableName="identity_provider" />
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

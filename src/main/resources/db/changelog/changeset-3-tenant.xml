@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
+    <changeSet id="3" author="Matthew Shockman">
+
+        <createTable tableName="tenant">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="realm_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="enabled" type="bool" defaultValueBoolean="true">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="slug" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="tenant" baseColumnNames="realm_id" constraintName="fk_tenant_realm" referencedTableName="realm"
+                                 referencedColumnNames="id" onDelete="CASCADE" />
+
+        <addUniqueConstraint tableName="tenant" columnNames="realm_id, name" constraintName="uq_tenant_realm_name" />
+        <addUniqueConstraint tableName="tenant" columnNames="realm_id, slug" constraintName="uq_tenant_realm_slug" />
+
+        <sql>
+            CREATE TRIGGER updated_at_now BEFORE UPDATE ON "tenant" FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+        </sql>
+
+        <rollback>
+            <dropUniqueConstraint tableName="tenant" constraintName="uq_tenant_realm_name" />
+            <dropUniqueConstraint tableName="tenant" constraintName="uq_tenant_realm_slug" />
+            <dropForeignKeyConstraint baseTableName="tenant" constraintName="fk_tenant_realm" />
+            <dropTable tableName="tenant" />
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>
