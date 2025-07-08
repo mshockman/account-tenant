@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/realms/{realm}/tenants/{tenant}/accounts")
+@RequestMapping("/realms/{realm}/tenants/{tenant}/")
 class RealmTenantAccountController(
     private val realmService: RealmService,
     private val tenantService: TenantService,
     private val accountService: AccountService
 ) {
-    @PostMapping("")
+    @PostMapping("accounts")
     fun createTenantAccount(
         @PathVariable("realm") realmSlug: String,
         @PathVariable("tenant") tenantSlug: String,
@@ -37,7 +37,7 @@ class RealmTenantAccountController(
         return accountService.create(tenant, createAccountRequest).toRealmTenantAccount()
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping("accounts/{accountId}")
     fun getTenantAccountById(
         @PathVariable("realm") realmSlug: String,
         @PathVariable("tenant") tenantSlug: String,
@@ -48,7 +48,7 @@ class RealmTenantAccountController(
         return this@RealmTenantAccountController.accountService.findTenantAccountById(tenant, accountId).toRealmTenantAccount()
     }
 
-    @PatchMapping("/{accountId}")
+    @PatchMapping("accounts/{accountId}")
     fun updateTenantAccount(
         @PathVariable("realm") realmSlug: String,
         @PathVariable("tenant") tenantSlug: String,
@@ -61,7 +61,7 @@ class RealmTenantAccountController(
         return this@RealmTenantAccountController.accountService.update(account, updateAccountRequest).toRealmTenantAccount()
     }
 
-    @DeleteMapping("/{accountId}")
+    @DeleteMapping("accounts/{accountId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteTenantAccount(
         @PathVariable("realm") realmSlug: String,

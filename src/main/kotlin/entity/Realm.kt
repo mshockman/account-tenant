@@ -14,7 +14,7 @@ class Realm(
     val id: UUID = UUID.randomUUID(),
 
     @Column(nullable = false, length = 100)
-    val name: String,
+    var name: String,
 
     @Column(nullable = false, unique = true, length = 50)
     val slug: String,
@@ -25,5 +25,5 @@ class Realm(
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    val updatedAt: Instant? = null
+    var updatedAt: Instant? = null
 )

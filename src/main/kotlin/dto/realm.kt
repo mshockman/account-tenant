@@ -11,5 +11,12 @@ data class RealmResponse(val id: UUID, var name: String, val slug: String, val c
 fun Realm.toResponse(): RealmResponse {
     requireNotNull(createdAt) { "createdAt must not be null" }
     requireNotNull(updatedAt) { "updatedAt must not be null" }
-    return RealmResponse(id, name, slug, createdAt, updatedAt)
+
+    return RealmResponse(
+        id = id,
+        name = name,
+        slug = slug,
+        createdAt = requireNotNull(createdAt) { "createdAt must not be null" },
+        updatedAt = requireNotNull(updatedAt) { "updatedAt must not be null" }
+    )
 }

@@ -1,0 +1,39 @@
+### Create a new realm
+POST http://localhost:8180/realms
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Realm",
+  "slug": "test-realm"
+}
+
+### Create new realm tenant
+POST http://localhost:8180/realms/test-realm/tenants
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Tenant",
+  "slug": "test-tenant",
+  "enabled": true
+}
+
+### Create new realm identity provider
+POST http://localhost:8180/realms/test-realm/identity-providers
+Content-Type: application/json
+Accept: application/json
+
+{
+  "issuer": "http://localhost:8080/test",
+  "name": "test idp",
+  "type": "OIDC",
+  "defaultSyncMode": "ALWAYS",
+  "config": {
+    "authUrl": "http://localhost:8080/test/auth",
+    "clientId": "test",
+    "clientSecret": "test",
+    "jwksUrl": "http://localhost:8080/test/jwks",
+    "tokenUrl": "http://localhost:8080/test/tokens"
+  }
+}
