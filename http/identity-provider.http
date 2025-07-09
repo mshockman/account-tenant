@@ -37,3 +37,18 @@ Accept: application/json
     "tokenUrl": "http://localhost:8080/test/tokens"
   }
 }
+
+> {%
+    client.global.set("idpId", response.body.id)
+
+    client.test("Name and slug correct", function() {
+        client.assert(response.body.name == "test idp")
+    })
+%}
+
+
+### Get Identity Provider
+GET http://localhost:8180/realms/test-realm/identity-providers/{{idpId}}
+
+### Delete Identity Provider
+DELETE http://localhost:8180/realms/test-realm/identity-providers/{{idpId}}

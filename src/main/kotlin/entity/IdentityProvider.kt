@@ -1,8 +1,12 @@
 package dev.shockman.entity
 
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.shockman.shared.types.IdentityProviderMapperSyncMode
 import dev.shockman.shared.types.IdentityProviderType
 import dev.shockman.shared.types.IdpConfig
+import dev.shockman.shared.types.OidcIdpConfig
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -18,6 +22,8 @@ import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.hibernate.engine.spi.SharedSessionContractImplementor
+import java.sql.ResultSet
 import java.time.Instant
 import java.util.UUID
 
@@ -61,6 +67,32 @@ data class IdentityProvider(
     var defaultSyncMode: IdentityProviderMapperSyncMode?,
 
     @Column(columnDefinition = "jsonb")
-    @Type(JsonBinaryType::class)
+    @Type(IdpConfigType::class)
     var config: IdpConfig
 )
+
+class IdpConfigType : JsonBinaryType() {
+    private val objectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+
+    override fun nullSafeGet(
+        rs: ResultSet,
+        position: Int,
+        session: SharedSessionContractImplementor?,
+        owner: Any?
+    ): Any? {
+        val value = rs.getString(position) ?: return null
+
+        try {
+            val type = IdentityProviderType.valueOf(rs.getString(rs.findColumn("type")))
+
+            return when(type) {
+                IdentityProviderType.OIDC -> objectMapper.readValue(value, OidcIdpConfig::class.java)
+            }
+        } catch (e: JsonProcessingException) {
+            throw RuntimeException("Failed to parse IdpConfig JSON: $value", e)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun returnedClass(): Class<Any> = IdpConfig::class.java as Class<Any>
+}

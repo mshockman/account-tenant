@@ -91,6 +91,15 @@ fun IdentityProvider.toTenantIdentityProviderResponse(): TenantIdentityProviderR
     )
 }
 
+interface IdpConfigResponse
+
+data class OidcConfigResponse(
+    val authUrl: String?,
+    val tokenUrl: String?,
+    val jwksUrl: String?,
+    val clientId: String?,
+) : IdpConfigResponse
+
 data class IdentityProviderResponse(
     val id: UUID,
     val createdAt: Instant,
@@ -100,7 +109,7 @@ data class IdentityProviderResponse(
     val name: String?,
     val type: IdentityProviderType?,
     val defaultSyncMode: IdentityProviderMapperSyncMode?,
-    val config: IdpConfig
+    val config: IdpConfigResponse
 )
 
 fun IdentityProvider.toIdentityProviderResponse(): IdentityProviderResponse {
@@ -113,7 +122,15 @@ fun IdentityProvider.toIdentityProviderResponse(): IdentityProviderResponse {
         name = name,
         type = type,
         defaultSyncMode = defaultSyncMode,
-        config = config
+        config = when(type) {
+            IdentityProviderType.OIDC -> OidcConfigResponse(
+                authUrl = (config as OidcIdpConfig).authUrl,
+                tokenUrl = (config as OidcIdpConfig).tokenUrl,
+                jwksUrl = (config as OidcIdpConfig).jwksUrl,
+                clientId = (config as OidcIdpConfig).clientId
+            )
+            null -> throw RuntimeException("Type cannot be null during response.")
+        }
     )
 }
 
