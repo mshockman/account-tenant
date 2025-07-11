@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import dev.shockman.dto.idp.CreateRealmIdentityProvider
 import dev.shockman.dto.idp.UpdateChildIdentityProvider
 import dev.shockman.dto.idp.UpdateOidcIdentityProvider
-import dev.shockman.dto.idp.UpdateParentIdentityProvider
 import dev.shockman.dto.idp.toIdentityProviderType
 import dev.shockman.entity.IdentityProvider
 import dev.shockman.entity.Realm
@@ -45,24 +44,30 @@ class IdentityProviderService(val idpRepository: IdentityProviderRepository, val
         return idpRepository.findByRealmAndIdAndTenantIsNull(realm, id) ?: throw EntityNotFoundException(IDENTITY_PROVIDER_NOT_FOUND_EXCEPTION_MESSAGE)
     }
 
-    fun updateIdentityProvider(identityProvider: IdentityProvider, updateNode: ObjectNode): IdentityProvider {
-        val update = when(identityProvider.type) {
-            IdentityProviderType.OIDC -> objectMapper.treeToValue(updateNode, UpdateOidcIdentityProvider::class.java)
-            IdentityProviderType.CHILD -> objectMapper.treeToValue(updateNode, UpdateChildIdentityProvider::class.java)
-        }
+    fun update(idp: IdentityProvider, update: UpdateOidcIdentityProvider): IdentityProvider {
+        idp.enabled = update.enabled
+        idp.defaultSyncMode = update.defaultSyncMode
+        idp.issuer = update.issuer
+        idp.config = update.config
+        idp.name = update.name
+        return idpRepository.save(idp)
+    }
 
-        if(update is UpdateParentIdentityProvider) {
-            identityProvider.enabled = update.enabled
-            identityProvider.defaultSyncMode = update.defaultSyncMode
-            identityProvider.issuer = update.issuer
-            identityProvider.config = update.config
-            identityProvider.name = update.name
-            return idpRepository.save(identityProvider)
-        } else if(update is UpdateChildIdentityProvider) {
-            identityProvider.enabled = update.enabled
-            return idpRepository.save(identityProvider)
-        } else {
-            throw RuntimeException("Unknown idp update type")
+    fun update(idp: IdentityProvider, update: UpdateChildIdentityProvider): IdentityProvider {
+        idp.enabled = update.enabled
+        return idpRepository.save(idp)
+    }
+
+    fun updateIdentityProvider(identityProvider: IdentityProvider, updateNode: ObjectNode): IdentityProvider {
+        return when(identityProvider.type) {
+            IdentityProviderType.OIDC -> {
+                val updateIdp = objectMapper.treeToValue(updateNode, UpdateOidcIdentityProvider::class.java)
+                update(identityProvider, updateIdp)
+            }
+            IdentityProviderType.CHILD -> {
+                val updateIdp = objectMapper.treeToValue(updateNode, UpdateChildIdentityProvider::class.java)
+                update(identityProvider, updateIdp)
+            }
         }
     }
 
