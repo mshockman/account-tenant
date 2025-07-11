@@ -35,7 +35,8 @@ Accept: application/json
     "clientSecret": "test",
     "jwksUrl": "http://localhost:8080/test/jwks",
     "tokenUrl": "http://localhost:8080/test/tokens"
-  }
+  },
+  "enabled": true
 }
 
 > {%
@@ -49,6 +50,43 @@ Accept: application/json
 
 ### Get Identity Provider
 GET http://localhost:8180/realms/test-realm/identity-providers/{{idpId}}
+
+> {%
+    client.global.set("idpId", response.body.id)
+
+    client.test("Name and slug correct", function() {
+        client.assert(response.body.name == "test idp")
+    })
+%}
+
+
+### Update Identity Provider
+PATCH http://localhost:8180/realms/test-realm/identity-providers/{{idpId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "enabled": true,
+  "defaultSyncMode": "ALWAYS",
+  "issuer": "http://localhost:8080/new",
+  "name": "test3",
+  "config": {
+    "authUrl": "http://localhost:8080/test/auth22",
+    "clientId": "test2",
+    "clientSecret": "test2",
+    "jwksUrl": "http://localhost:8080/test/jwks2",
+    "tokenUrl": "http://localhost:8080/test/tokens2"
+  }
+}
+
+> {%
+    client.global.set("idpId", response.body.id)
+
+    client.test("Name and slug correct", function() {
+        client.assert(response.body.name == "test3")
+    })
+%}
+
 
 ### Delete Identity Provider
 DELETE http://localhost:8180/realms/test-realm/identity-providers/{{idpId}}

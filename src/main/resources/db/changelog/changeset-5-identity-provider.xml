@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
     <changeSet id="5" author="Matthew Shockman">
         <sql>
-            CREATE TYPE idp_type AS ENUM('OIDC');
+            CREATE TYPE idp_type AS ENUM('OIDC', 'CHILD');
         </sql>
         <sql>
             CREATE TYPE sync_mode_type AS ENUM('ALWAYS', 'IS_BLANK', 'ON_LINK', 'NEVER');
@@ -27,19 +27,25 @@
             <column name="tenant_id" type="uuid">
                 <constraints nullable="true" />
             </column>
+            <column name="parent_id" type="uuid">
+                <constraints nullable="true" />
+            </column>
             <column name="issuer" type="text">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="name" type="varchar(100)">
                 <constraints nullable="true" />
             </column>
             <column name="type" type="idp_type">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="default_sync_mode" type="sync_mode_type">
                 <constraints nullable="true" />
             </column>
-            <column name="config" type="jsonb" defaultValueComputed="'{}'::jsonb">
+            <column name="config" type="jsonb">
+                <constraints nullable="true" />
+            </column>
+            <column name="enabled" type="bool">
                 <constraints nullable="false" />
             </column>
         </createTable>
@@ -53,6 +59,9 @@
 
         <addForeignKeyConstraint baseTableName="identity_provider" baseColumnNames="tenant_id" constraintName="fk_identity_provider_tenant" referencedTableName="tenant"
                                  referencedColumnNames="id" onDelete="CASCADE" />
+
+        <addForeignKeyConstraint baseTableName="identity_provider" baseColumnNames="parent_id" constraintName="fk_identity_provider_parent" referencedTableName="identity_provider"
+                                 referencedColumnNames="id" />
 
         <sql>
             CREATE UNIQUE INDEX uq_identity_provider_realm_issuer ON "identity_provider" (realm_id, issuer) WHERE tenant_id IS NULL;
@@ -85,6 +94,7 @@
             <dropIndex tableName="identity_provider" indexName="uq_identity_provider_realm_tenant_issuer" />
             <dropForeignKeyConstraint baseTableName="identity_provider" constraintName="fk_identity_provider_tenant" />
             <dropForeignKeyConstraint baseTableName="identity_provider" constraintName="fk_identity_provider_realm" />
+            <dropForeignKeyConstraint baseTableName="identity_provider" constraintName="fk_identity_provider_parent" />
             <dropTable tableName="identity_provider" />
             <sql>
                 DROP TYPE idp_type;

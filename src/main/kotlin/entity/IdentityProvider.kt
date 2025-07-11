@@ -50,25 +50,32 @@ data class IdentityProvider(
     @JoinColumn(name = "tenant_id", nullable = true)
     val tenant: Tenant?,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", nullable = true)
+    val parent: Tenant?,
+
     @Column(nullable = true, length = 320)
-    var issuer: String,
+    var issuer: String?,
 
     @Column(nullable = true, length = 100)
     var name: String?,
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
-    @Column(nullable = true)
-    val type: IdentityProviderType?,
+    @Column(nullable = false)
+    val type: IdentityProviderType,
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     @Column(nullable = true, name="default_sync_mode")
     var defaultSyncMode: IdentityProviderMapperSyncMode?,
 
-    @Column(columnDefinition = "jsonb")
+    @Column(columnDefinition = "jsonb", nullable = true)
     @Type(IdpConfigType::class)
-    var config: IdpConfig
+    var config: IdpConfig?,
+
+    @Column(nullable = false)
+    var enabled: Boolean,
 )
 
 class IdpConfigType : JsonBinaryType() {
@@ -87,6 +94,7 @@ class IdpConfigType : JsonBinaryType() {
 
             return when(type) {
                 IdentityProviderType.OIDC -> objectMapper.readValue(value, OidcIdpConfig::class.java)
+                IdentityProviderType.CHILD -> null
             }
         } catch (e: JsonProcessingException) {
             throw RuntimeException("Failed to parse IdpConfig JSON: $value", e)

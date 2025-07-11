@@ -1,14 +1,11 @@
 package dev.shockman.controller
 
-import dev.shockman.dto.CreateIdentityProvider
-import dev.shockman.dto.IdentityProviderResponse
-import dev.shockman.dto.RealmIdentityProviderResponse
-import dev.shockman.dto.UpdateRealmIdentityProvider
-import dev.shockman.dto.toIdentityProviderResponse
-import dev.shockman.dto.toRealmIdentityProviderResponse
+import com.fasterxml.jackson.databind.node.ObjectNode
+import dev.shockman.dto.idp.CreateRealmIdentityProvider
+import dev.shockman.dto.idp.IdentityProviderResponse
+import dev.shockman.dto.idp.toIdentityProviderResponse
 import dev.shockman.service.IdentityProviderService
 import dev.shockman.service.RealmService
-import dev.shockman.service.TenantService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,10 +27,10 @@ class RealmIdentityProviderController(
     @PostMapping("identity-providers")
     fun createRealmIdentityProvider(
         @PathVariable("realmSlug") realmSlug: String,
-        @RequestBody createIdentityProviderRequest: CreateIdentityProvider
-    ): RealmIdentityProviderResponse {
+        @RequestBody createIdentityProviderRequest: CreateRealmIdentityProvider
+    ): IdentityProviderResponse {
         val realm = realmService.findBySlug(realmSlug)
-        return identityProviderService.createRealmIdentityProvider(realm, createIdentityProviderRequest).toRealmIdentityProviderResponse()
+        return identityProviderService.createRealmIdentityProvider(realm, createIdentityProviderRequest).toIdentityProviderResponse()
     }
 
     @GetMapping("identity-providers/{idpId}")
@@ -51,15 +48,15 @@ class RealmIdentityProviderController(
     fun updateIdentityProviderById(
         @PathVariable("realmSlug") realmSlug: String,
         @PathVariable("idpId") id: UUID,
-        @RequestBody realmIdentityProviderUpdate: UpdateRealmIdentityProvider
-    ): RealmIdentityProviderResponse {
+        @RequestBody realmIdentityProviderUpdate: ObjectNode
+    ): IdentityProviderResponse {
         val realm = realmService.findBySlug(realmSlug)
         val idp = identityProviderService.getRealmScopeIdentityProviderById(realm, id)
 
         return identityProviderService.updateIdentityProvider(
             idp,
             realmIdentityProviderUpdate
-        ).toRealmIdentityProviderResponse()
+        ).toIdentityProviderResponse()
     }
 
     @DeleteMapping("identity-providers/{idpId}")
