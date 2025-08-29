@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
-    <changeSet id="9" author="Matthew Shockman">
+    <changeSet id="5" author="Matthew Shockman">
         <sql>
             CREATE TYPE identity_link_request_type AS ENUM('email', 'phone');
         </sql>
