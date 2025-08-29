@@ -7,6 +7,8 @@ junit-platform-launcher = "6.0.0-M1"
 spring-dependency-management = "1.1.7"
 jackson-kotlin = "2.19.1"
 hypersistence-utils-hibernate-63 = "3.10.1"
+authzed = "1.4.1"
+grpc = "1.73.0"
 
 [libraries]
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref="spring-boot" }
@@ -24,6 +26,10 @@ postgres = { module = "org.postgresql:postgresql", version.ref="postgres" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref="kotlin" }
 juint-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref="junit-platform-launcher" }
 hypersistence-utils-hibernate = { module = "io.hypersistence:hypersistence-utils-hibernate-63", version.ref = "hypersistence-utils-hibernate-63"}
+
+authzed-api = { module = "com.authzed.api:authzed", version.ref = "authzed" }
+grpc-api = { module = "io.grpc:grpc-api", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

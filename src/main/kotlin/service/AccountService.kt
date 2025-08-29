@@ -7,10 +7,11 @@ import dev.shockman.entity.Account
 import dev.shockman.repository.AccountRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
-class AccountService(val accountRepository: AccountRepository) {
+class AccountService(private val accountRepository: AccountRepository, private val authService: AuthorizationService) {
     fun findTenantAccountByUsername(tenant: Tenant, username: String): Account? {
         return accountRepository.findAccountByTenantAndUsername(tenant, username) ?: throw EntityNotFoundException("Account not found.")
     }
@@ -23,8 +24,9 @@ class AccountService(val accountRepository: AccountRepository) {
         return accountRepository.findAccountByTenantAndId(tenant, id) ?: throw EntityNotFoundException("Account not found.")
     }
 
+    @Transactional
     fun create(tenant: Tenant, account: CreateAccountRequest): Account {
-        return accountRepository.save(
+        val account = accountRepository.saveAndFlush(
             Account(
                 enabled = account.enabled,
                 username = account.username,
@@ -36,6 +38,10 @@ class AccountService(val accountRepository: AccountRepository) {
                 tenant = tenant
             )
         )
+
+        authService.linkAccountToTenant(account, tenant)
+
+        return account
     }
 
     fun update(account: Account, updateAccountRequest: UpdateAccountRequest): Account {

@@ -26,8 +26,8 @@ Accept: application/json
 
 {
   "enabled": true,
-  "username": "+17015550102",
-  "phone": "+17015550102",
+  "username": "+17015550103",
+  "phone": "+17015550103",
   "email": null,
   "firstName": "Testy",
   "lastName": "Testerson",

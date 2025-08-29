@@ -25,9 +25,6 @@
             <column name="invite_lifespan" type="int" defaultValue="86400">
                 <constraints nullable="false" />
             </column>
-            <column name="require_matching_identifier" type="bool" defaultValueBoolean="true">
-                <constraints nullable="false" />
-            </column>
         </createTable>
 
         <sql>

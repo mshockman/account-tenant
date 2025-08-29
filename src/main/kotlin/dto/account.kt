@@ -35,6 +35,7 @@ data class RealmTenantAccountResponse(
     val attributes: Map<String, Any>,
     val createdAt: Instant,
     val updatedAt: Instant,
+    val remoteId: String?
 )
 
 fun Account.toRealmTenantAccount(): RealmTenantAccountResponse {
@@ -48,6 +49,7 @@ fun Account.toRealmTenantAccount(): RealmTenantAccountResponse {
         enabled = enabled,
         attributes = attributes,
         createdAt = requireNotNull(createdAt) { "created timestamp is required" },
-        updatedAt = requireNotNull(updatedAt) { "updated timestamp is required" }
+        updatedAt = requireNotNull(updatedAt) { "updated timestamp is required" },
+        remoteId = remoteId,
     )
 }

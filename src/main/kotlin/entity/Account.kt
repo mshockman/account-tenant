@@ -41,6 +41,9 @@ data class Account(
     @Column(nullable = true, length = 100)
     var username: String,
 
+    @Column(nullable = true, length = 255, name="remote_id")
+    var remoteId: String? = null,
+
     @Column(nullable = true, length = 320)
     var email: String? = null,
 
