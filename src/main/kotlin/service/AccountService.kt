@@ -4,14 +4,22 @@ import dev.shockman.dto.CreateAccountRequest
 import dev.shockman.dto.UpdateAccountRequest
 import dev.shockman.entity.Tenant
 import dev.shockman.entity.Account
+import dev.shockman.messages.AccountCreatedEvent
 import dev.shockman.repository.AccountRepository
+import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Clock
 import java.util.UUID
 
 @Service
-class AccountService(private val accountRepository: AccountRepository, private val authService: AuthorizationService) {
+class AccountService(
+    private val accountRepository: AccountRepository,
+    private val outboxService: OutboxService,
+    private val clock: Clock,
+    private val tracer: Tracer
+) {
     fun findTenantAccountByUsername(tenant: Tenant, username: String): Account? {
         return accountRepository.findAccountByTenantAndUsername(tenant, username) ?: throw EntityNotFoundException("Account not found.")
     }
@@ -39,7 +47,27 @@ class AccountService(private val accountRepository: AccountRepository, private v
             )
         )
 
-        authService.linkAccountToTenant(account, tenant)
+        outboxService.send(
+            account.id.toString(),
+            AccountCreatedEvent(
+                realmId = account.tenant.realm.id,
+                tenantId = account.tenant.id,
+                accountId = account.id,
+                enabled = account.enabled,
+                firstName = account.firstName,
+                lastName = account.lastName,
+                email = account.email,
+                phone = account.phone,
+                username = account.username,
+                remoteId = account.remoteId,
+                attributes = account.attributes,
+                occurredAt = clock.instant(),
+                createdAt = requireNotNull(account.createdAt) { "Account created at timestamp is null." },
+                updatedAt = requireNotNull(account.updatedAt) { "Account updated at timestamp is null." },
+                version = account.version,
+                correlationId = tracer.currentSpan()?.context()?.traceId(),
+            )
+        )
 
         return account
     }

@@ -10,13 +10,16 @@
             <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" unique="true" />
             </column>
-            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+            <column name="created_at" type="timestamptz" defaultValueComputed="current_timestamp">
                 <constraints nullable="false" />
             </column>
-            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+            <column name="updated_at" type="timestamptz" defaultValueComputed="current_timestamp">
                 <constraints nullable="false" />
             </column>
             <column name="realm_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="version" type="bigint" defaultValue="0">
                 <constraints nullable="false" />
             </column>
             <column name="enabled" type="bool" defaultValueBoolean="true">

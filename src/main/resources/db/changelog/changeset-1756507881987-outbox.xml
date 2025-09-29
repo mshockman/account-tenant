@@ -1,0 +1,98 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd"
+>
+    <changeSet id="1756507881987" author="Matthew Shockman">
+        <createTable tableName="outbox">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="event_id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="created_at" type="timestamptz" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamptz" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="aggregate_id" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="correlation_id" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="text" defaultValue="PENDING">
+                <constraints nullable="false" />
+            </column>
+            <column name="topic" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="message_type" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="message" type="jsonb">
+                <constraints nullable="false" />
+            </column>
+            <column name="attempt" type="int" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="claimed_at" type="timestamptz">
+                <constraints nullable="true" />
+            </column>
+            <column name="claim_expires_at" type="timestamptz">
+                <constraints nullable="true" />
+            </column>
+            <column name="claimed_by" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="processed_at" type="timestamptz">
+                <constraints nullable="true" />
+            </column>
+            <column name="available_at" type="timestamptz" defaultValueComputed="current_timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="error" type="text">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <sql>
+            CREATE TRIGGER updated_at_now BEFORE UPDATE ON "outbox" FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+        </sql>
+
+        <sql>
+            ALTER TABLE outbox ADD CONSTRAINT ck_outbox_status CHECK (status IN ('PENDING','PROCESSING','SUCCESS','FAILED', 'BACKOFF'));
+        </sql>
+
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_outbox_active_aggregate_ids
+                ON outbox (aggregate_id, created_at, id)
+                WHERE status IN ('PENDING', 'PROCESSING', 'FAILED', 'BACKOFF');
+        </sql>
+
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_outbox_pending_available_at
+                ON outbox (available_at, created_at, id)
+                WHERE status IN ('PENDING', 'BACKOFF');
+        </sql>
+
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_outbox_processing_claimed_expires_at
+                ON outbox (claim_expires_at)
+                WHERE status = 'PROCESSING';
+        </sql>
+
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_outbox_correlation_id
+                ON outbox (correlation_id)
+                WHERE correlation_id IS NOT NULL;
+        </sql>
+
+        <rollback>
+            <dropTable tableName="outbox" />
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

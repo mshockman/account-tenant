@@ -19,6 +19,8 @@ dependencies {
 //    implementation(libs.spring.pulsar)
     implementation(libs.spring.validation)
     implementation(libs.spring.web)
+    implementation(libs.spring.kafka)
+    implementation(libs.spring.actuator)
 
     implementation(libs.jackson.kotlin)
     implementation(libs.kotlin.reflect)
@@ -27,6 +29,8 @@ dependencies {
     implementation(libs.authzed.api)
     implementation(libs.grpc.api)
     implementation(libs.grpc.stub)
+    implementation(libs.open.telemetry)
+    implementation(libs.micrometer.tracing.bridge.otel)
 
     developmentOnly(libs.spring.devtools)
     runtimeOnly(libs.postgres)

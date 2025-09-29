@@ -9,15 +9,19 @@ jackson-kotlin = "2.19.1"
 hypersistence-utils-hibernate-63 = "3.10.1"
 authzed = "1.4.1"
 grpc = "1.73.0"
+open-telemetry = "1.54.1"
+micrometer-tracing-bridge-otel = "1.5.4"
 
 [libraries]
-spring-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref="spring-boot" }
-spring-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref="spring-boot" }
-spring-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref="spring-boot" }
-spring-pulsar = { module = "org.springframework.boot:spring-boot-starter-pulsar", version.ref="spring-boot" }
-spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref="spring-boot" }
-spring-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref="spring-boot" }
-spring-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref="spring-boot" }
+spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-mail = { module = "org.springframework.boot:spring-boot-starter-mail" }
+spring-pulsar = { module = "org.springframework.boot:spring-boot-starter-pulsar" }
+spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref="jackson-kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref="kotlin" }
@@ -26,6 +30,8 @@ postgres = { module = "org.postgresql:postgresql", version.ref="postgres" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref="kotlin" }
 juint-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref="junit-platform-launcher" }
 hypersistence-utils-hibernate = { module = "io.hypersistence:hypersistence-utils-hibernate-63", version.ref = "hypersistence-utils-hibernate-63"}
+open-telemetry = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version.ref = "open-telemetry" }
+micrometer-tracing-bridge-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel", version.ref="micrometer-tracing-bridge-otel"}
 
 authzed-api = { module = "com.authzed.api:authzed", version.ref = "authzed" }
 grpc-api = { module = "io.grpc:grpc-api", version.ref = "grpc" }

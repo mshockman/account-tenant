@@ -25,5 +25,8 @@ class Realm(
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    var updatedAt: Instant? = null
+    var updatedAt: Instant? = null,
+
+    @Version
+    var version: Long = 0,
 )

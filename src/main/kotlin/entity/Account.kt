@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.Version
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
@@ -28,6 +29,9 @@ data class Account(
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     val updatedAt: Instant? = null,
+
+    @Version
+    var version: Long = 0,
 
     @Column(nullable = false)
     var enabled: Boolean = true,

@@ -16,10 +16,10 @@
             <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" unique="true" />
             </column>
-            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+            <column name="created_at" type="timestamptz" defaultValueComputed="current_timestamp">
                 <constraints nullable="false" />
             </column>
-            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+            <column name="updated_at" type="timestamptz" defaultValueComputed="current_timestamp">
                 <constraints nullable="false" />
             </column>
             <column name="account_id" type="uuid">
@@ -28,7 +28,7 @@
             <column name="request_type" type="identity_link_request_type">
                 <constraints nullable="false" />
             </column>
-            <column name="expires" type="timestamp">
+            <column name="expires" type="timestamptz">
                 <constraints nullable="true" />
             </column>
             <column name="status" type="link_request_status" defaultValue="pending">

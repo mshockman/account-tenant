@@ -10,5 +10,6 @@
     <include file="db/changelog/changeset-3-tenant.xml"/>
     <include file="db/changelog/changeset-4-account.xml"/>
     <include file="/db/changelog/changeset-5-account-identity-link-request.xml"/>
+    <include file="/db/changelog/changeset-1756507881987-outbox.xml"/>
 
 </databaseChangeLog>
