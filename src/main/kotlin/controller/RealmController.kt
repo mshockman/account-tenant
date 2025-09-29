@@ -37,6 +37,7 @@ class RealmController(val realmService: RealmService) {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteRealm(@RequestParam("id") id: UUID) {
-        realmService.delete(id)
+        val realm = realmService.findById(id)
+        realmService.delete(realm)
     }
 }
