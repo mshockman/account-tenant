@@ -6,7 +6,7 @@ import java.time.Instant
 import java.util.UUID
 
 
-@OutboxLetter(TENANT_ACCOUNT_EVENT_TOPIC)
+@OutboxLetter(TENANT_TENANT_EVENT_TOPIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TenantCreatedEvent(
     val realmId: UUID,
@@ -26,7 +26,7 @@ data class TenantCreatedEvent(
     override val correlationId: String? = null,
 ) : BasicOutboxEvent
 
-@OutboxLetter(TENANT_ACCOUNT_EVENT_TOPIC)
+@OutboxLetter(TENANT_TENANT_EVENT_TOPIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TenantUpdatedEvent(
     val realmId: UUID,
@@ -46,7 +46,7 @@ data class TenantUpdatedEvent(
     override val correlationId: String? = null,
 ) : BasicOutboxEvent
 
-@OutboxLetter(TENANT_ACCOUNT_EVENT_TOPIC)
+@OutboxLetter(TENANT_TENANT_EVENT_TOPIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TenantDeletedEvent(
     val realmId: UUID,

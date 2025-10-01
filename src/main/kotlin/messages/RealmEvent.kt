@@ -5,7 +5,7 @@ import dev.shockman.service.OutboxLetter
 import java.time.Instant
 import java.util.UUID
 
-@OutboxLetter(TENANT_ACCOUNT_EVENT_TOPIC)
+@OutboxLetter(TENANT_REALM_EVENT_TOPIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class RealmCreatedEvent(
     val realmId: UUID,
@@ -23,7 +23,7 @@ data class RealmCreatedEvent(
     override val correlationId: String? = null,
 ) : BasicOutboxEvent
 
-@OutboxLetter(TENANT_ACCOUNT_EVENT_TOPIC)
+@OutboxLetter(TENANT_REALM_EVENT_TOPIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class RealmUpdatedEvent(
     val realmId: UUID,
@@ -41,7 +41,7 @@ data class RealmUpdatedEvent(
     override val correlationId: String? = null,
 ) : BasicOutboxEvent
 
-@OutboxLetter(TENANT_ACCOUNT_EVENT_TOPIC)
+@OutboxLetter(TENANT_REALM_EVENT_TOPIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class RealmDeletedEvent(
     val realmId: UUID,

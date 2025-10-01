@@ -4,8 +4,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Test Realm3",
-  "slug": "test-realm3"
+  "name": "Test Realm5",
+  "slug": "test-realm5"
 }
 
 ### Create new realm tenant
@@ -14,8 +14,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Test Tenant3",
-  "slug": "test-tenant3",
+  "name": "Test Tenant5",
+  "slug": "test-tenant5",
   "enabled": true
 }
 
@@ -26,11 +26,11 @@ Accept: application/json
 
 {
   "enabled": true,
-  "username": "+17015550104",
-  "phone": "+17015550104",
+  "username": "+17015550125",
+  "phone": "+17015550125",
   "email": null,
-  "firstName": "Testy3",
-  "lastName": "Testerson3",
+  "firstName": "Testy51",
+  "lastName": "Testerson51",
   "attributes": {
     "custom": "hello world"
   }
