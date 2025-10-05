@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jpa)
 }
 
-group = "dev.shockman"
+group = "dev.shockman.tenant"
 version = "1.0-SNAPSHOT"
 
 repositories {
