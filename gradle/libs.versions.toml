@@ -38,7 +38,8 @@ hypersistence-utils-hibernate = { module = "io.hypersistence:hypersistence-utils
 open-telemetry = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version.ref = "open-telemetry" }
 micrometer-tracing-bridge-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel", version.ref="micrometer-tracing-bridge-otel"}
 
-dev-shockman-messaging = { module = "dev.shockman.messaging:spring-outbox-kafka-postgres-starter", version.ref="dev-shockman-messaging" }
+dev-shockman-messaging-starter = { module = "dev.shockman.messaging:spring-outbox-kafka-postgres-starter", version.ref="dev-shockman-messaging" }
+dev-shockman-messaging-core = { module = "dev.shockman.messaging:message-core", version.ref="dev-shockman-messaging" }
 dev-shockman-liquibase-init = { module = "dev.shockman.postgres:postgres-liquibase-init", version.ref="dev-shockman-liquibase-init" }
 dev-shockman-logging = { module = "dev.shockman.logging:logging-core", version.ref="dev-shockman-logging"}
 

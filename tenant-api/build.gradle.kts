@@ -9,12 +9,8 @@ group = "dev.shockman.tenant"
 val raw = providers.gradleProperty("releaseVersion").orNull
 version = raw?.removePrefix("api/v") ?: "0.0.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation(libs.dev.shockman.messaging)
+    implementation(libs.dev.shockman.messaging.core)
     implementation(libs.jackson.kotlin)
 //    implementation(libs.jackson.databind)
 }

@@ -45,7 +45,7 @@ dependencies {
     implementation(libs.open.telemetry)
     implementation(libs.micrometer.tracing.bridge.otel)
 
-    implementation(libs.dev.shockman.messaging)
+    implementation(libs.dev.shockman.messaging.starter)
     implementation(libs.dev.shockman.liquibase.init)
     implementation(libs.dev.shockman.logging)
 
