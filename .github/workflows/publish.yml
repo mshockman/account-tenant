@@ -39,5 +39,5 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
       - name: Publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_PUBLISH_TOKEN }}
         run: ./gradlew tenant-api:publish -PreleaseVersion="${GITHUB_REF_NAME}"
