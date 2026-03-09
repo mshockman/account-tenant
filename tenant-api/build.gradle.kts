@@ -7,7 +7,7 @@ plugins {
 group = "dev.shockman.tenant"
 
 val raw = providers.gradleProperty("releaseVersion").orNull
-version = raw?.removePrefix("v") ?: "0.0.0-SNAPSHOT"
+version = raw?.removePrefix("api/v") ?: "0.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
