@@ -5,9 +5,9 @@ import dev.shockman.tenant.dto.CreateTenantRequest
 import dev.shockman.tenant.dto.UpdateTenant
 import dev.shockman.tenant.entity.Realm
 import dev.shockman.tenant.entity.Tenant
-import dev.shockman.tenant.messages.TenantCreatedEvent
-import dev.shockman.tenant.messages.TenantDeletedEvent
-import dev.shockman.tenant.messages.TenantUpdatedEvent
+import dev.shockman.tenant.api.messages.TenantCreatedEvent
+import dev.shockman.tenant.api.messages.TenantDeletedEvent
+import dev.shockman.tenant.api.messages.TenantUpdatedEvent
 import dev.shockman.tenant.repository.TenantRepository
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException

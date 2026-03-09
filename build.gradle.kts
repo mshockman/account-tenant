@@ -9,21 +9,24 @@ plugins {
 group = "dev.shockman.tenant"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
 
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/mshockman/tenant-service")
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/mshockman/tenant-service")
 
-        credentials {
-            username = (findProperty("gpr.user") as String?) ?: System.getenv("GITHUB_ACTOR")
-            password = (findProperty("gpr.key") as String?) ?: System.getenv("GITHUB_TOKEN")
+            credentials {
+                username = (findProperty("gpr.user") as String?) ?: System.getenv("GITHUB_ACTOR")
+                password = (findProperty("gpr.key") as String?) ?: System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
 
 dependencies {
+    implementation(project(":tenant-api"))
     implementation(libs.spring.jpa)
 //    implementation(libs.spring.mail)
 //    implementation(libs.spring.pulsar)

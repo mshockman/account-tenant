@@ -3,3 +3,4 @@ plugins {
 }
 
 rootProject.name = "tenant-service"
+include("tenant-api")

@@ -5,9 +5,9 @@ import dev.shockman.tenant.dto.CreateAccountRequest
 import dev.shockman.tenant.dto.UpdateAccountRequest
 import dev.shockman.tenant.entity.Account
 import dev.shockman.tenant.entity.Tenant
-import dev.shockman.tenant.messages.AccountCreatedEvent
-import dev.shockman.tenant.messages.AccountDeletedEvent
-import dev.shockman.tenant.messages.AccountUpdatedEvent
+import dev.shockman.tenant.api.messages.AccountCreatedEvent
+import dev.shockman.tenant.api.messages.AccountDeletedEvent
+import dev.shockman.tenant.api.messages.AccountUpdatedEvent
 import dev.shockman.tenant.repository.AccountRepository
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException

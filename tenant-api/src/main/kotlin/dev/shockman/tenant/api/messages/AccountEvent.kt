@@ -1,4 +1,4 @@
-package dev.shockman.tenant.messages
+package dev.shockman.tenant.api.messages
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import dev.shockman.messaging.core.api.annotations.Message

@@ -3,8 +3,8 @@ package dev.shockman.tenant.service
 import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
 import dev.shockman.tenant.dto.CreateRealmRequest
 import dev.shockman.tenant.entity.Realm
-import dev.shockman.tenant.messages.RealmCreatedEvent
-import dev.shockman.tenant.messages.RealmDeletedEvent
+import dev.shockman.tenant.api.messages.RealmCreatedEvent
+import dev.shockman.tenant.api.messages.RealmDeletedEvent
 import dev.shockman.tenant.repository.RealmRepository
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException

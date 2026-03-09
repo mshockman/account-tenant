@@ -1,4 +1,4 @@
-package dev.shockman.tenant.messages
+package dev.shockman.tenant.api.messages
 
 const val TENANT_ACCOUNT_EVENT_TOPIC = "tenant.account.events"
 const val TENANT_REALM_EVENT_TOPIC = "tenant.realm.events"
