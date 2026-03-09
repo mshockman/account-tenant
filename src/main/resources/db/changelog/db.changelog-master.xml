@@ -5,11 +5,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
 
-    <include file="db/changelog/changeset-1-init.xml"/>
+    <!--suppress XmlPathReference -->
+    <include file="dev/shockman/postgres/liquibase/init/init.yml" />
     <include file="db/changelog/changeset-2-realm.xml"/>
     <include file="db/changelog/changeset-3-tenant.xml"/>
     <include file="db/changelog/changeset-4-account.xml"/>
-    <include file="/db/changelog/changeset-5-account-identity-link-request.xml"/>
-    <include file="/db/changelog/changeset-1756507881987-outbox.xml"/>
+    <include file="db/changelog/changeset-5-account-identity-link-request.xml"/>
+    <!--suppress XmlPathReference -->
+    <include file="dev/shockman/messaging/message/storage/jdbc/postgres/liquibase/changelog/outbox/outbox.yaml"/>
 
 </databaseChangeLog>

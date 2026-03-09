@@ -1,6 +1,6 @@
 [versions]
 spring-boot = "3.5.3"
-kotlin = "2.2.0"
+kotlin = "2.3.10"
 liquibase = "4.32.0"
 postgres = "42.7.7"
 junit-platform-launcher = "6.0.0-M1"
@@ -11,6 +11,9 @@ authzed = "1.4.1"
 grpc = "1.73.0"
 open-telemetry = "1.54.1"
 micrometer-tracing-bridge-otel = "1.5.4"
+dev-shockman-messaging = "0.0.3"
+dev-shockman-liquibase-init = "1.1.0"
+dev-shockman-logging = "0.1.1"
 
 [libraries]
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
@@ -32,6 +35,10 @@ juint-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 hypersistence-utils-hibernate = { module = "io.hypersistence:hypersistence-utils-hibernate-63", version.ref = "hypersistence-utils-hibernate-63"}
 open-telemetry = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version.ref = "open-telemetry" }
 micrometer-tracing-bridge-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel", version.ref="micrometer-tracing-bridge-otel"}
+
+dev-shockman-messaging = { module = "dev.shockman.messaging:spring-outbox-kafka-postgres-starter", version.ref="dev-shockman-messaging" }
+dev-shockman-liquibase-init = { module = "dev.shockman.postgres:postgres-liquibase-init", version.ref="dev-shockman-liquibase-init" }
+dev-shockman-logging = { module = "dev.shockman.logging:logging-core", version.ref="dev-shockman-logging"}
 
 authzed-api = { module = "com.authzed.api:authzed", version.ref = "authzed" }
 grpc-api = { module = "io.grpc:grpc-api", version.ref = "grpc" }

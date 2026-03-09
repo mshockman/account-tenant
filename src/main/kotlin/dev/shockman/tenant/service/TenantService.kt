@@ -1,5 +1,6 @@
 package dev.shockman.tenant.service
 
+import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
 import dev.shockman.tenant.dto.CreateTenantRequest
 import dev.shockman.tenant.dto.UpdateTenant
 import dev.shockman.tenant.entity.Realm
@@ -12,14 +13,12 @@ import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.Clock
 import java.util.UUID
 
 @Service
 class TenantService(
     private val tenantRepository: TenantRepository,
     private val outboxService: OutboxService,
-    private val clock: Clock,
     private val tracer: Tracer
 ) {
     fun findByRealmAndId(realm: Realm, id: UUID): Tenant {
@@ -42,7 +41,6 @@ class TenantService(
         )
 
         outboxService.send(
-            tenant.id.toString(),
             TenantCreatedEvent(
                 realmId = tenant.realm.id,
                 tenantId = tenant.id,
@@ -52,9 +50,8 @@ class TenantService(
                 version = tenant.version,
                 createdAt = requireNotNull(tenant.createdAt) { "Tenant created at timestamp is null." },
                 updatedAt = requireNotNull(tenant.updatedAt) { "Tenant updated at timestamp is null." },
-                occurredAt = clock.instant(),
-                correlationId = tracer.currentSpan()?.context()?.traceId(),
-            )
+            ),
+            correlationId = tracer.currentSpan()?.context()?.traceId()
         )
 
         return tenant
@@ -65,13 +62,11 @@ class TenantService(
         tenantRepository.delete(tenant)
 
         outboxService.send(
-            tenant.id.toString(),
             TenantDeletedEvent(
                 realmId = tenant.realm.id,
                 tenantId = tenant.id,
-                occurredAt = clock.instant(),
-                correlationId = tracer.currentSpan()?.context()?.traceId(),
-            )
+            ),
+            correlationId = tracer.currentSpan()?.context()?.traceId()
         )
     }
 
@@ -82,7 +77,6 @@ class TenantService(
         val newTenant = tenantRepository.saveAndFlush(tenant)
 
         outboxService.send(
-            newTenant.id.toString(),
             TenantUpdatedEvent(
                 realmId = newTenant.realm.id,
                 tenantId = newTenant.id,
@@ -92,9 +86,8 @@ class TenantService(
                 version = newTenant.version,
                 createdAt = requireNotNull(newTenant.createdAt) { "Tenant created at timestamp is null." },
                 updatedAt = requireNotNull(newTenant.updatedAt) { "Tenant updated at timestamp is null." },
-                occurredAt = clock.instant(),
-                correlationId = tracer.currentSpan()?.context()?.traceId(),
-            )
+            ),
+            correlationId = tracer.currentSpan()?.context()?.traceId()
         )
 
         return newTenant

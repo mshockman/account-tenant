@@ -1,16 +1,17 @@
 package dev.shockman.tenant.messages
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import dev.shockman.tenant.service.OutboxLetter
-import java.time.Instant
+import dev.shockman.messaging.core.api.annotations.Message
+import dev.shockman.messaging.core.api.annotations.MessageAggregateId
 import java.util.UUID
+import java.time.Instant
 
 
-@OutboxLetter(TENANT_TENANT_EVENT_TOPIC)
+@Message(TENANT_TENANT_EVENT_TOPIC, TenantServiceEvents.TENANT_DELETED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TenantCreatedEvent(
     val realmId: UUID,
-    val tenantId: UUID,
+    @MessageAggregateId val tenantId: UUID,
 
     val name: String,
     val slug: String,
@@ -19,18 +20,13 @@ data class TenantCreatedEvent(
     val version: Long,
     val createdAt: Instant,
     val updatedAt: Instant,
+)
 
-    override val eventId: UUID = UUID.randomUUID(),
-    override val occurredAt: Instant,
-    override val type: String = TenantServiceEvents.TENANT_CREATED,
-    override val correlationId: String? = null,
-) : BasicOutboxEvent
-
-@OutboxLetter(TENANT_TENANT_EVENT_TOPIC)
+@Message(TENANT_TENANT_EVENT_TOPIC, TenantServiceEvents.TENANT_DELETED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TenantUpdatedEvent(
     val realmId: UUID,
-    val tenantId: UUID,
+    @MessageAggregateId val tenantId: UUID,
 
     val name: String,
     val slug: String,
@@ -39,21 +35,11 @@ data class TenantUpdatedEvent(
     val createdAt: Instant,
     val updatedAt: Instant,
     val version: Long,
+)
 
-    override val eventId: UUID = UUID.randomUUID(),
-    override val occurredAt: Instant,
-    override val type: String = TenantServiceEvents.TENANT_UPDATED,
-    override val correlationId: String? = null,
-) : BasicOutboxEvent
-
-@OutboxLetter(TENANT_TENANT_EVENT_TOPIC)
+@Message(TENANT_TENANT_EVENT_TOPIC, TenantServiceEvents.TENANT_DELETED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TenantDeletedEvent(
     val realmId: UUID,
-    val tenantId: UUID,
-
-    override val eventId: UUID = UUID.randomUUID(),
-    override val occurredAt: Instant,
-    override val type: String = TenantServiceEvents.TENANT_DELETED,
-    override val correlationId: String? = null,
-) : BasicOutboxEvent
+    @MessageAggregateId val tenantId: UUID,
+)

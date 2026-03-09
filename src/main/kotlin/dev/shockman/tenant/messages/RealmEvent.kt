@@ -1,14 +1,15 @@
 package dev.shockman.tenant.messages
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import dev.shockman.tenant.service.OutboxLetter
+import dev.shockman.messaging.core.api.annotations.Message
+import dev.shockman.messaging.core.api.annotations.MessageAggregateId
 import java.time.Instant
 import java.util.UUID
 
-@OutboxLetter(TENANT_REALM_EVENT_TOPIC)
+@Message(TENANT_REALM_EVENT_TOPIC, TenantServiceEvents.REALM_CREATED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class RealmCreatedEvent(
-    val realmId: UUID,
+    @MessageAggregateId val realmId: UUID,
 
     val name: String,
     val slug: String,
@@ -16,38 +17,22 @@ data class RealmCreatedEvent(
     val version: Long,
     val createdAt: Instant,
     val updatedAt: Instant,
+)
 
-    override val eventId: UUID = UUID.randomUUID(),
-    override val occurredAt: Instant,
-    override val type: String = TenantServiceEvents.REALM_CREATED,
-    override val correlationId: String? = null,
-) : BasicOutboxEvent
-
-@OutboxLetter(TENANT_REALM_EVENT_TOPIC)
+@Message(TENANT_REALM_EVENT_TOPIC, TenantServiceEvents.REALM_UPDATED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class RealmUpdatedEvent(
-    val realmId: UUID,
-
+    @MessageAggregateId val realmId: UUID,
     val name: String,
     val slug: String,
 
     val version: Long,
     val createdAt: Instant,
     val updatedAt: Instant,
+)
 
-    override val eventId: UUID = UUID.randomUUID(),
-    override val occurredAt: Instant,
-    override val type: String = TenantServiceEvents.REALM_UPDATED,
-    override val correlationId: String? = null,
-) : BasicOutboxEvent
-
-@OutboxLetter(TENANT_REALM_EVENT_TOPIC)
+@Message(TENANT_REALM_EVENT_TOPIC, TenantServiceEvents.REALM_DELETED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class RealmDeletedEvent(
-    val realmId: UUID,
-
-    override val eventId: UUID = UUID.randomUUID(),
-    override val occurredAt: Instant,
-    override val type: String = TenantServiceEvents.REALM_DELETED,
-    override val correlationId: String? = null,
-) : BasicOutboxEvent
+    @MessageAggregateId val realmId: UUID
+)

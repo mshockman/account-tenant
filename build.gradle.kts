@@ -11,6 +11,16 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/mshockman/tenant-service")
+
+        credentials {
+            username = (findProperty("gpr.user") as String?) ?: System.getenv("GITHUB_ACTOR")
+            password = (findProperty("gpr.key") as String?) ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -32,6 +42,10 @@ dependencies {
     implementation(libs.open.telemetry)
     implementation(libs.micrometer.tracing.bridge.otel)
 
+    implementation(libs.dev.shockman.messaging)
+    implementation(libs.dev.shockman.liquibase.init)
+    implementation(libs.dev.shockman.logging)
+
     developmentOnly(libs.spring.devtools)
     runtimeOnly(libs.postgres)
     testImplementation(libs.spring.test)
@@ -44,5 +58,5 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }

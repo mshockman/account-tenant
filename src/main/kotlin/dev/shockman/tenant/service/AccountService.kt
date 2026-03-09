@@ -1,5 +1,6 @@
 package dev.shockman.tenant.service
 
+import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
 import dev.shockman.tenant.dto.CreateAccountRequest
 import dev.shockman.tenant.dto.UpdateAccountRequest
 import dev.shockman.tenant.entity.Account
@@ -12,14 +13,12 @@ import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.Clock
 import java.util.UUID
 
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
     private val outboxService: OutboxService,
-    private val clock: Clock,
     private val tracer: Tracer
 ) {
     fun findTenantAccountByUsername(tenant: Tenant, username: String): Account? {
@@ -50,7 +49,6 @@ class AccountService(
         )
 
         outboxService.send(
-            account.id.toString(),
             AccountCreatedEvent(
                 realmId = account.tenant.realm.id,
                 tenantId = account.tenant.id,
@@ -63,12 +61,8 @@ class AccountService(
                 username = account.username,
                 remoteId = account.remoteId,
                 attributes = account.attributes,
-                occurredAt = clock.instant(),
-                createdAt = requireNotNull(account.createdAt) { "Account created at timestamp is null." },
-                updatedAt = requireNotNull(account.updatedAt) { "Account updated at timestamp is null." },
-                version = account.version,
-                correlationId = tracer.currentSpan()?.context()?.traceId(),
-            )
+            ),
+            correlationId = tracer.currentSpan()?.context()?.traceId()
         )
 
         return account
@@ -87,7 +81,6 @@ class AccountService(
         val updatedAccount = accountRepository.saveAndFlush(account)
 
         outboxService.send(
-            updatedAccount.id.toString(),
             AccountUpdatedEvent(
                 realmId = updatedAccount.tenant.realm.id,
                 tenantId = updatedAccount.tenant.id,
@@ -100,12 +93,8 @@ class AccountService(
                 username = updatedAccount.username,
                 remoteId = updatedAccount.remoteId,
                 attributes = updatedAccount.attributes,
-                occurredAt = clock.instant(),
-                createdAt = requireNotNull(updatedAccount.createdAt) { "Account created at timestamp is null." },
-                updatedAt = requireNotNull(updatedAccount.updatedAt) { "Account updated at timestamp is null." },
-                version = updatedAccount.version,
-                correlationId = tracer.currentSpan()?.context()?.traceId(),
-            )
+            ),
+            correlationId = tracer.currentSpan()?.context()?.traceId()
         )
 
         return updatedAccount
@@ -116,14 +105,12 @@ class AccountService(
         accountRepository.delete(account)
 
         outboxService.send(
-            aggregateId = account.id.toString(),
             message = AccountDeletedEvent(
                 realmId = account.tenant.realm.id,
                 tenantId = account.tenant.id,
                 accountId = account.id,
-                occurredAt = clock.instant(),
-                correlationId = tracer.currentSpan()?.context()?.traceId(),
-            )
+            ),
+            correlationId = tracer.currentSpan()?.context()?.traceId()
         )
     }
 }
