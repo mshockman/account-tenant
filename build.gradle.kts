@@ -15,7 +15,7 @@ allprojects {
 
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/mshockman/tenant-service")
+            url = uri("https://maven.pkg.github.com/mshockman/account-tenant")
 
             credentials {
                 username = (findProperty("gpr.user") as String?) ?: System.getenv("GITHUB_ACTOR")
