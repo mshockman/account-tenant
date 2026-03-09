@@ -2,7 +2,7 @@ name: Publish
 on:
   push:
     tags:
-      - "v*"
+      - "api/v*"
 
 permissions:
   contents: read
