@@ -40,9 +40,6 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.liquibase)
     implementation(libs.hypersistence.utils.hibernate)
-    implementation(libs.authzed.api)
-    implementation(libs.grpc.api)
-    implementation(libs.grpc.stub)
     implementation(libs.open.telemetry)
     implementation(libs.micrometer.tracing.bridge.otel)
 

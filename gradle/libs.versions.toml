@@ -6,10 +6,7 @@ postgres = "42.7.7"
 junit-platform-launcher = "6.0.0-M1"
 spring-dependency-management = "1.1.7"
 jackson-kotlin = "2.19.1"
-jackson-databind = "2.21.1"
 hypersistence-utils-hibernate-63 = "3.10.1"
-authzed = "1.4.1"
-grpc = "1.73.0"
 open-telemetry = "1.54.1"
 micrometer-tracing-bridge-otel = "1.5.4"
 dev-shockman-messaging = "1.0.0"
@@ -20,7 +17,6 @@ dev-shockman-logging = "0.1.1"
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-mail = { module = "org.springframework.boot:spring-boot-starter-mail" }
-spring-pulsar = { module = "org.springframework.boot:spring-boot-starter-pulsar" }
 spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
@@ -28,7 +24,6 @@ spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actua
 spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref="jackson-kotlin" }
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref="jackson-databind" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref="kotlin" }
 liquibase = { module = "org.liquibase:liquibase-core", version.ref="liquibase" }
 postgres = { module = "org.postgresql:postgresql", version.ref="postgres" }
@@ -42,10 +37,6 @@ dev-shockman-messaging-starter = { module = "dev.shockman.messaging:spring-outbo
 dev-shockman-messaging-core = { module = "dev.shockman.messaging:message-core", version.ref="dev-shockman-messaging" }
 dev-shockman-liquibase-init = { module = "dev.shockman.postgres:postgres-liquibase-init", version.ref="dev-shockman-liquibase-init" }
 dev-shockman-logging = { module = "dev.shockman.logging:logging-core", version.ref="dev-shockman-logging"}
-
-authzed-api = { module = "com.authzed.api:authzed", version.ref = "authzed" }
-grpc-api = { module = "io.grpc:grpc-api", version.ref = "grpc" }
-grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
