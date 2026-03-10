@@ -4,30 +4,30 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Test Realm5",
-  "slug": "test-realm5"
+  "name": "Test Realm6",
+  "slug": "test-realm6"
 }
 
 ### Create new realm tenant
-POST http://localhost:8180/realms/test-realm2/tenants
+POST http://localhost:8180/realms/test-realm6/tenants
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Test Tenant5",
-  "slug": "test-tenant5",
+  "name": "Test Tenant6",
+  "slug": "test-tenant6",
   "enabled": true
 }
 
 ### Create tenant user
-POST http://localhost:8180/realms/test-realm2/tenants/test-tenant2/accounts
+POST http://localhost:8180/realms/test-realm6/tenants/test-tenant6/accounts
 Content-Type: application/json
 Accept: application/json
 
 {
   "enabled": true,
-  "username": "+17015550185",
-  "phone": "+17015550185",
+  "username": "+17015550201",
+  "phone": "+17015550201",
   "email": null,
   "firstName": "Testy51",
   "lastName": "Testerson51",

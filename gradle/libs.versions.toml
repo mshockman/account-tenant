@@ -12,7 +12,7 @@ authzed = "1.4.1"
 grpc = "1.73.0"
 open-telemetry = "1.54.1"
 micrometer-tracing-bridge-otel = "1.5.4"
-dev-shockman-messaging = "0.0.3"
+dev-shockman-messaging = "1.0.0"
 dev-shockman-liquibase-init = "1.1.0"
 dev-shockman-logging = "0.1.1"
 
