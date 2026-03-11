@@ -26,6 +26,10 @@ class RealmService(
         return repository.findById(id).orElseThrow { EntityNotFoundException("Realm with that id not found.") }
     }
 
+    fun findAll(): List<Realm> {
+        return repository.findAll()
+    }
+
     @Transactional
     fun create(createRealm: CreateRealmRequest): Realm {
         val realm = repository.saveAndFlush(

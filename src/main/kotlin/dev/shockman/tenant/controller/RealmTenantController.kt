@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/realms/{realm}")
+@RequestMapping("/api/realms/{realm}")
 class RealmTenantController(private val realmService: RealmService, private val tenantService: TenantService) {
     @GetMapping("/tenants/{tenantSlug}")
     fun getTenant(@PathVariable("realm") realmSlug: String, @PathVariable("tenantSlug") tenantSlug: String): TenantResponse {

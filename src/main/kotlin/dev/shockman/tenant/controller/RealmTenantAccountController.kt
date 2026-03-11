@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/realms/{realm}/tenants/{tenant}/")
+@RequestMapping("/api/realms/{realm}/tenants/{tenant}/")
 class RealmTenantAccountController(
     private val realmService: RealmService,
     private val tenantService: TenantService,

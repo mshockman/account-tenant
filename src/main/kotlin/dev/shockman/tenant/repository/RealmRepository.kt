@@ -6,4 +6,6 @@ import java.util.UUID
 
 interface RealmRepository: JpaRepository<Realm, UUID> {
     fun findBySlug(slug: String): Realm?
+
+    fun findByNameContainingIgnoreCase(name: String): List<Realm>
 }
