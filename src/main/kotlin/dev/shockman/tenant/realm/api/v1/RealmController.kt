@@ -1,9 +1,7 @@
-package dev.shockman.tenant.controller
+package dev.shockman.tenant.realm.api.v1
 
-import dev.shockman.tenant.dto.CreateRealmRequest
-import dev.shockman.tenant.dto.RealmResponse
-import dev.shockman.tenant.dto.toResponse
-import dev.shockman.tenant.service.RealmService
+import dev.shockman.tenant.realm.application.RealmService
+import dev.shockman.tenant.tenant.application.TenantService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,31 +14,33 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/api/realms")
-class RealmController(val realmService: RealmService) {
-    @GetMapping("/id/{id}")
-    fun getRealm(@PathVariable id: UUID): RealmResponse {
+@RequestMapping("/api/v1/realms")
+class RealmController(val realmService: RealmService, private val tenantService: TenantService) {
+    @GetMapping("/ids/{id}")
+    fun getRealm(
+        @PathVariable id: UUID
+    ): RealmResponse {
         return realmService.findById(id).toResponse()
     }
 
-    @GetMapping("/slug/{slug}")
-    fun getRealmBySlug(@PathVariable slug: String): RealmResponse {
-        return realmService.findBySlug(slug).toResponse()
-    }
-
     @PostMapping("/create")
-    fun createNewRealm(@RequestBody realm: CreateRealmRequest): RealmResponse {
+    fun createNewRealm(
+        @RequestBody realm: CreateRealmRequest
+    ): RealmResponse {
         return realmService.create(realm).toResponse()
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/ids/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteRealm(@PathVariable id: UUID) {
-        val realm = realmService.findById(id)
-        realmService.delete(realm)
+    fun deleteRealm(
+        @PathVariable id: UUID
+    ) {
+        realmService.findById(id).let {
+            realmService.delete(it)
+        }
     }
 
-    @GetMapping("/")
+    @GetMapping("/all")
     fun searchRealms(): List<RealmResponse> {
         return realmService.findAll().map { it.toResponse() }
     }

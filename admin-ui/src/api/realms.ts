@@ -5,6 +5,8 @@ export interface Realm {
     id: string;
     slug: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 
@@ -26,5 +28,11 @@ export function createRealm(request: CreateRealmRequest) {
             method: 'POST',
             body: JSON.stringify(request),
         }
+    )
+}
+
+export function getRealm(id: string) {
+    return apiFetch<Realm>(
+        `/api/realms/${id}`
     )
 }

@@ -1,17 +1,12 @@
-package dev.shockman.tenant.dto
+package dev.shockman.tenant.realm.api.v1
 
-import dev.shockman.tenant.entity.Realm
+import dev.shockman.tenant.realm.persistance.Realm
 import java.time.Instant
 import java.util.UUID
-
-data class CreateRealmRequest(val name: String, val slug: String)
 
 data class RealmResponse(val id: UUID, var name: String, val slug: String, val createdAt: Instant, var updatedAt: Instant)
 
 fun Realm.toResponse(): RealmResponse {
-    requireNotNull(createdAt) { "createdAt must not be null" }
-    requireNotNull(updatedAt) { "updatedAt must not be null" }
-
     return RealmResponse(
         id = id,
         name = name,

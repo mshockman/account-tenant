@@ -1,11 +1,11 @@
-package dev.shockman.tenant.service
+package dev.shockman.tenant.realm.application
 
 import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
-import dev.shockman.tenant.dto.CreateRealmRequest
-import dev.shockman.tenant.entity.Realm
 import dev.shockman.tenant.api.messages.RealmCreatedEvent
 import dev.shockman.tenant.api.messages.RealmDeletedEvent
-import dev.shockman.tenant.repository.RealmRepository
+import dev.shockman.tenant.realm.api.v1.CreateRealmRequest
+import dev.shockman.tenant.realm.persistance.Realm
+import dev.shockman.tenant.realm.persistance.RealmRepository
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service

@@ -1,28 +1,8 @@
-package dev.shockman.tenant.dto
+package dev.shockman.tenant.accounts.api.v1
 
-import dev.shockman.tenant.entity.Account
+import dev.shockman.tenant.accounts.persistance.Account
 import java.time.Instant
 import java.util.UUID
-
-data class CreateAccountRequest(
-    val username: String,
-    val firstName: String? = null,
-    val lastName: String? = null,
-    val email: String? = null,
-    val phone: String? = null,
-    val enabled: Boolean = true,
-    val attributes: Map<String, Any> = emptyMap()
-)
-
-data class UpdateAccountRequest(
-    val username: String,
-    val firstName: String? = null,
-    val lastName: String? = null,
-    val email: String? = null,
-    val phone: String? = null,
-    val enabled: Boolean = true,
-    val attributes: Map<String, Any> = emptyMap()
-)
 
 data class RealmTenantAccountResponse(
     val id: UUID,

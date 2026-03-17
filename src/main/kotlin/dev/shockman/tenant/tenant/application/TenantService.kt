@@ -1,14 +1,14 @@
-package dev.shockman.tenant.service
+package dev.shockman.tenant.tenant.application
 
 import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
-import dev.shockman.tenant.dto.CreateTenantRequest
-import dev.shockman.tenant.dto.UpdateTenant
-import dev.shockman.tenant.entity.Realm
-import dev.shockman.tenant.entity.Tenant
 import dev.shockman.tenant.api.messages.TenantCreatedEvent
 import dev.shockman.tenant.api.messages.TenantDeletedEvent
 import dev.shockman.tenant.api.messages.TenantUpdatedEvent
-import dev.shockman.tenant.repository.TenantRepository
+import dev.shockman.tenant.tenant.api.v1.CreateTenantRequest
+import dev.shockman.tenant.tenant.api.v1.UpdateTenant
+import dev.shockman.tenant.realm.persistance.Realm
+import dev.shockman.tenant.tenant.persistance.Tenant
+import dev.shockman.tenant.tenant.persistance.TenantRepository
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
@@ -27,6 +27,10 @@ class TenantService(
 
     fun findByRealmAndSlug(realm: Realm, slug: String): Tenant {
         return tenantRepository.findByRealmAndSlug(realm, slug) ?: throw EntityNotFoundException("Tenant not found.")
+    }
+
+    fun findById(id: UUID): Tenant {
+        return tenantRepository.findById(id).orElseThrow { EntityNotFoundException("Tenant not found.") }
     }
 
     @Transactional
@@ -92,4 +96,39 @@ class TenantService(
 
         return newTenant
     }
+
+    fun countByRealm(realm: Realm): Long {
+        return tenantRepository.countByRealm(realm)
+    }
+
+//    fun findRealmTenants(realm: Realm, limit: Int?, filter: String?, after: After? = null): List<Tenant> {
+//        val filteredId = filter?.let {
+//            try {
+//                UUID.fromString(it)
+//            } catch (e: IllegalArgumentException) {
+//                null
+//            }
+//        }
+//
+//        val spec = TenantFilterSpecification.byRealm(realm).applyIfNotNull(filter) { spec, filter ->
+//            spec.and(TenantFilterSpecification.matchesFilter(filter, filteredId))
+//        }.applyIfNotNull(after) { spec, after ->
+//            spec.and(
+//                TenantFilterSpecification.afterCursor(
+//                createdAt = after.createdAt,
+//                afterId = after.id
+//            ))
+//        }
+//
+//        return tenantRepository.findBy(spec) { q ->
+//            q.sortBy(
+//                Sort.by(
+//                    Sort.Order.asc("createdAt"),
+//                    Sort.Order.asc("id"),
+//                )
+//            ).applyIfNotNull(limit) { q2, v ->
+//                q2.limit(v)
+//            }.all()
+//        }
+//    }
 }

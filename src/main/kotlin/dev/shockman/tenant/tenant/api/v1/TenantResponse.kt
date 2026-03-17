@@ -1,14 +1,8 @@
-package dev.shockman.tenant.dto
+package dev.shockman.tenant.tenant.api.v1
 
-import dev.shockman.tenant.entity.Tenant
+import dev.shockman.tenant.tenant.persistance.Tenant
 import java.time.Instant
 import java.util.UUID
-
-data class CreateTenantRequest(
-    val slug: String,
-    val name: String,
-    val enabled: Boolean = true,
-)
 
 data class TenantResponse(
     val id: UUID,
@@ -17,11 +11,6 @@ data class TenantResponse(
     val createdAt: Instant,
     val updatedAt: Instant,
     val enabled: Boolean,
-)
-
-data class UpdateTenant(
-    val name: String? = null,
-    val enabled: Boolean? = null
 )
 
 fun Tenant.toResponse(): TenantResponse {

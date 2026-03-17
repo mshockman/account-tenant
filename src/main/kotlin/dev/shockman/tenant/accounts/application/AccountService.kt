@@ -1,14 +1,14 @@
-package dev.shockman.tenant.service
+package dev.shockman.tenant.accounts.application
 
 import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
-import dev.shockman.tenant.dto.CreateAccountRequest
-import dev.shockman.tenant.dto.UpdateAccountRequest
-import dev.shockman.tenant.entity.Account
-import dev.shockman.tenant.entity.Tenant
+import dev.shockman.tenant.accounts.persistance.Account
+import dev.shockman.tenant.accounts.persistance.AccountRepository
 import dev.shockman.tenant.api.messages.AccountCreatedEvent
 import dev.shockman.tenant.api.messages.AccountDeletedEvent
 import dev.shockman.tenant.api.messages.AccountUpdatedEvent
-import dev.shockman.tenant.repository.AccountRepository
+import dev.shockman.tenant.accounts.api.v1.CreateAccountRequest
+import dev.shockman.tenant.accounts.api.v1.UpdateAccountRequest
+import dev.shockman.tenant.tenant.persistance.Tenant
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
@@ -31,6 +31,10 @@ class AccountService(
 
     fun findTenantAccountById(tenant: Tenant, id: UUID): Account {
         return accountRepository.findAccountByTenantAndId(tenant, id) ?: throw EntityNotFoundException("Account not found.")
+    }
+
+    fun getAccountById(accountId: UUID): Account {
+        return accountRepository.findById(accountId).orElseThrow { EntityNotFoundException("Account not found.") }
     }
 
     @Transactional

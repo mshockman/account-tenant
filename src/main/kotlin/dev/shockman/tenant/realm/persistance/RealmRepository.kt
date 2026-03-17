@@ -1,6 +1,5 @@
-package dev.shockman.tenant.repository
+package dev.shockman.tenant.realm.persistance
 
-import dev.shockman.tenant.entity.Realm
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 

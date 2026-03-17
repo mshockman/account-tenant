@@ -1,0 +1,11 @@
+### Search for Realm Tenants
+POST http://localhost:8180/tenants/search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "realmId": "5552452f-2c47-41d9-a1e2-be4a8868bbd6",
+  "query": "5952b40a-4699-4f5b-95d8-0e266c6139a4",
+  "limit": 10,
+  "cursor": null
+}

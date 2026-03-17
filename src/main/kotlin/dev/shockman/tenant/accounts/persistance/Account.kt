@@ -1,5 +1,6 @@
-package dev.shockman.tenant.entity
+package dev.shockman.tenant.accounts.persistance
 
+import dev.shockman.tenant.tenant.persistance.Tenant
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
