@@ -1,0 +1,47 @@
+### Create a new realm
+POST http://localhost:8180/api/v1/realms/create
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Test Realm10",
+  "slug": "test-realm10"
+}
+
+> {%
+    client.global.set("realmId", response.body.id)
+%}
+
+### Create new tenant is last created realm
+POST http://localhost:8180/api/v1/tenants/create
+Content-Type: application/json
+Accept: application/json
+
+{
+  "realmId": "{{realmId}}",
+  "enabled": true,
+  "name": "Test Tenant 3",
+  "slug": "test-tenant-3"
+}
+
+> {%
+    client.global.set("tenantId", response.body.id)
+%}
+
+### Create new account in tenant
+POST http://localhost:8180/api/v1/accounts/create
+Content-Type: application/json
+Accept: application/json
+
+{
+  "tenantId": "c84bbba6-a0b0-4a35-a9f9-ceb941112a14",
+  "enabled": true,
+  "email": "test@test.com",
+  "firstName": "testy",
+  "lastName": "testerson",
+  "phone": "+17015550101",
+  "username": "testy-testerson",
+  "attributes": {
+    "test": 2
+  }
+}

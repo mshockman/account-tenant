@@ -1,12 +1,16 @@
 ### Create a new realm
-POST http://localhost:8180/realms
+POST http://localhost:8180/api/v1/realms/create
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Test Realm",
-  "slug": "test-realm"
+  "name": "Test Realm4",
+  "slug": "test-realm4"
 }
+
+> {%
+    client.global.set("response", response)
+ %}
 
 ### Get Existing Realm By Slug
 GET http://localhost:8180/realms/test-realm

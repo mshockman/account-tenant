@@ -20,7 +20,7 @@ class AccountController(
     private val tenantService: TenantService,
     private val accountService: AccountService
 ) {
-    @PostMapping("accounts")
+    @PostMapping("/create")
     fun createTenantAccount(
         @RequestBody createAccountRequest: CreateAccountRequest
     ): RealmTenantAccountResponse {
@@ -28,14 +28,14 @@ class AccountController(
         return accountService.create(tenant, createAccountRequest).toRealmTenantAccount()
     }
 
-    @GetMapping("accounts/{accountId}")
+    @GetMapping("/{accountId}")
     fun getTenantAccountById(
         @PathVariable accountId: UUID
     ): RealmTenantAccountResponse {
         return accountService.getAccountById(accountId).toRealmTenantAccount()
     }
 
-    @PatchMapping("accounts/{accountId}")
+    @PatchMapping("/{accountId}")
     fun updateTenantAccount(
         @PathVariable accountId: UUID,
         @RequestBody updateAccountRequest: UpdateAccountRequest
@@ -44,7 +44,7 @@ class AccountController(
         return this@AccountController.accountService.update(account, updateAccountRequest).toRealmTenantAccount()
     }
 
-    @DeleteMapping("accounts/{accountId}")
+    @DeleteMapping("/{accountId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteTenantAccount(
         @PathVariable accountId: UUID

@@ -15,7 +15,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/realms")
-class RealmController(val realmService: RealmService, private val tenantService: TenantService) {
+class RealmController(val realmService: RealmService) {
     @GetMapping("/ids/{id}")
     fun getRealm(
         @PathVariable id: UUID
