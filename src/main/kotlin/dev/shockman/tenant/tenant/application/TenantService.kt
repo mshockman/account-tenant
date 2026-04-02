@@ -7,10 +7,14 @@ import dev.shockman.tenant.api.messages.TenantUpdatedEvent
 import dev.shockman.tenant.tenant.api.v1.CreateTenantRequest
 import dev.shockman.tenant.tenant.api.v1.UpdateTenant
 import dev.shockman.tenant.realm.persistance.Realm
+import dev.shockman.tenant.shared.applyIfNotNull
+import dev.shockman.tenant.shared.toUUIDOrNull
 import dev.shockman.tenant.tenant.persistance.Tenant
 import dev.shockman.tenant.tenant.persistance.TenantRepository
+import dev.shockman.tenant.tenant.persistance.specifications.TenantFilterSpecification
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -97,38 +101,34 @@ class TenantService(
         return newTenant
     }
 
-    fun countByRealm(realm: Realm): Long {
-        return tenantRepository.countByRealm(realm)
+    fun countByRealm(realm: Realm, query: String?): Long {
+        val filteredId = query?.toUUIDOrNull()
+
+        val spec = TenantFilterSpecification.byRealm(realm).applyIfNotNull(query) { spec, filter ->
+            spec.and(TenantFilterSpecification.matchesFilter(filter, filteredId))
+        }
+
+        return tenantRepository.count(spec)
     }
 
-//    fun findRealmTenants(realm: Realm, limit: Int?, filter: String?, after: After? = null): List<Tenant> {
-//        val filteredId = filter?.let {
-//            try {
-//                UUID.fromString(it)
-//            } catch (e: IllegalArgumentException) {
-//                null
-//            }
-//        }
-//
-//        val spec = TenantFilterSpecification.byRealm(realm).applyIfNotNull(filter) { spec, filter ->
-//            spec.and(TenantFilterSpecification.matchesFilter(filter, filteredId))
-//        }.applyIfNotNull(after) { spec, after ->
-//            spec.and(
-//                TenantFilterSpecification.afterCursor(
-//                createdAt = after.createdAt,
-//                afterId = after.id
-//            ))
-//        }
-//
-//        return tenantRepository.findBy(spec) { q ->
-//            q.sortBy(
-//                Sort.by(
-//                    Sort.Order.asc("createdAt"),
-//                    Sort.Order.asc("id"),
-//                )
-//            ).applyIfNotNull(limit) { q2, v ->
-//                q2.limit(v)
-//            }.all()
-//        }
-//    }
+    fun searchRealmTenants(realm: Realm, limit: Int?, query: String?, cursor: MatchedCursor?): List<Tenant> {
+        val filteredId = query?.toUUIDOrNull()
+
+        val spec = TenantFilterSpecification.byRealm(realm).applyIfNotNull(query) { spec, filter ->
+            spec.and(TenantFilterSpecification.matchesFilter(filter, filteredId))
+        }.applyIfNotNull(cursor) { spec, cursor ->
+            spec.and(
+                TenantFilterSpecification.afterCursorCreatedAt(
+                    cursor = cursor,
+                    filterId = filteredId
+                )
+            )
+        }
+
+        return tenantRepository.findBy(spec) { q ->
+            q.applyIfNotNull(limit) { q2, v ->
+                q2.limit(v)
+            }.all()
+        }
+    }
 }

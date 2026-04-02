@@ -1,7 +1,12 @@
 package dev.shockman.tenant.tenant.api.v1
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import dev.shockman.tenant.realm.application.RealmService
+import dev.shockman.tenant.shared.toUUIDOrNull
+import dev.shockman.tenant.tenant.application.MatchedCursor
 import dev.shockman.tenant.tenant.application.TenantService
+import dev.shockman.tenant.tenant.application.toCursorString
+import dev.shockman.tenant.tenant.application.toMatchedCursor
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -17,6 +22,7 @@ import java.util.UUID
 class TenantController(
     private val tenantService: TenantService,
     private val realmService: RealmService,
+    private val objectMapper: ObjectMapper
 ) {
     @PostMapping("/create")
     fun createTenant(
@@ -49,5 +55,50 @@ class TenantController(
     ) {
         val tenant = tenantService.findById(id)
         tenantService.delete(tenant)
+    }
+
+    @PostMapping("/search")
+    fun searchRealmTenants(@RequestBody searchRealmTenantRequest: SearchRealmTenantRequest): SearchRealmTenantResponse {
+        val realm = realmService.findById(searchRealmTenantRequest.realmId)
+
+        val filterId = searchRealmTenantRequest.query?.toUUIDOrNull()
+
+        val cursor = searchRealmTenantRequest.cursor?.toMatchedCursor(objectMapper)
+
+        val tenants = tenantService.searchRealmTenants(
+            realm,
+            searchRealmTenantRequest.limit + 1,
+            searchRealmTenantRequest.query,
+            cursor
+        ).map { it.toResponse() }.toMutableList()
+
+        val nextCursor = if(tenants.size > searchRealmTenantRequest.limit) {
+            tenants.removeLast()
+
+            tenants.lastOrNull()?.let {
+                MatchedCursor(
+                    when (filterId) {
+                        null -> null
+                        it.id -> 0
+                        else -> 1
+                    },
+                    it.createdAt,
+                    it.id
+                )
+            }
+        } else null
+
+        return SearchRealmTenantResponse(
+            tenants,
+            realm.id,
+            nextCursor?.toCursorString(objectMapper)
+        )
+    }
+
+    @PostMapping("/count")
+    fun countRealmSearch(@RequestBody searchRealmTenantRequest: SearchRealmTenantRequest): Long {
+        val realm = realmService.findById(searchRealmTenantRequest.realmId)
+
+        return tenantService.countByRealm(realm, searchRealmTenantRequest.query)
     }
 }

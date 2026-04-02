@@ -45,3 +45,28 @@ Accept: application/json
     "test": 2
   }
 }
+
+
+### Search for a tenant
+POST http://localhost:8180/api/v1/tenants/search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "realmId": "152ab2d6-a4aa-4053-a3a6-546ebdf083f6",
+  "cursor": null,
+  "limit": 2,
+  "query": "test"
+}
+
+### Search for a tenant next cursor
+POST http://localhost:8180/api/v1/tenants/search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "realmId": "152ab2d6-a4aa-4053-a3a6-546ebdf083f6",
+  "cursor": "eyJyYW5rIjpudWxsLCJhZnRlciI6IjIwMjYtMDMtMTdUMjE6MzA6MDUuNDQzNDMwWiIsImlkIjoiN2NiYjMwNzktM2NlYS00ZGY1LTgxM2QtNDQ4YTIwY2U3OTczIn0=",
+  "limit": 2,
+  "query": "test"
+}
