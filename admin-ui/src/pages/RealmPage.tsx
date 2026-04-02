@@ -1,5 +1,5 @@
 import {useParams} from "react-router";
-import {useGetRealm, useSearchRealmTenants} from "../hooks/useRealms.ts";
+import {useGetRealm} from "../hooks/useRealms.ts";
 import {RealmPageHeader} from "../components/RealmPageHeader.tsx";
 import RealmTenants from "../components/RealmTenants.tsx";
 import {Box} from "@mui/material";

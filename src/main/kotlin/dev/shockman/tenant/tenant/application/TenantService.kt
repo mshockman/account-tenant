@@ -14,7 +14,6 @@ import dev.shockman.tenant.tenant.persistance.TenantRepository
 import dev.shockman.tenant.tenant.persistance.specifications.TenantFilterSpecification
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
