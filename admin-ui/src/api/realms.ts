@@ -113,3 +113,23 @@ export function searchRealmTenantsCount(request: SearchRealmTenantsRequest): Pro
         }
     )
 }
+
+
+export interface UpdateRealmRequest {
+    name: string;
+    slug: string;
+    id: string;
+}
+
+
+export function updateRealm(request: UpdateRealmRequest): Promise<Realm> {
+    const {id, ...rest} = request;
+
+    return apiFetch<Realm>(
+        `/api/v1/realms/ids/${id}`,
+        {
+            method: 'PATCH',
+            body: JSON.stringify(rest),
+        }
+    )
+}

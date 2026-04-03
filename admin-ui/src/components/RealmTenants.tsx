@@ -1,10 +1,9 @@
 import {useSearchRealmTenants, useSearchRealmTenantsCount} from "../hooks/useRealms.ts";
 import {type ReactNode, useEffect, useState} from "react";
 import {
-    Alert,
     Box,
     Button, Link,
-    Paper, Snackbar, Table,
+    Paper, Table,
     TableBody,
     TableCell,
     TableContainer,
@@ -15,12 +14,7 @@ import {
 } from "@mui/material";
 import {Link as RouterLink} from "react-router";
 import {CreateRealmTenantDialog} from "./CreateRealmTenantDialog.tsx";
-
-type Notice = {
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-    open: boolean;
-}
+import {useNotification} from "./notifications.tsx";
 
 export default function RealmTenants({realmId, query=null, cursor=null, limit=10}: {realmId: string, query: string | null, cursor: string | null, limit: number}) {
     const [currentQuery, setCurrentQuery] = useState<string | null>(query);
@@ -29,6 +23,7 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
     const [currentLimit] = useState<number>(limit);
     const [isCreateRealmDialogOpen, setIsCreateRealmDialogOpen] = useState<boolean>(false);
     const [pages, setPages] = useState<(string | null)[]>([]);
+    const { showNotification } = useNotification();
 
     const searchTenants = useSearchRealmTenants({
         realmId,
@@ -43,12 +38,6 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
         limit: currentLimit,
     })
 
-    const [notice, setNotice] = useState<Notice>({
-        message: "",
-        severity: "success",
-        open: false,
-    })
-
     useEffect(() => {
         const id = setTimeout(() => {
             if(currentQuery != filter) {
@@ -61,20 +50,8 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
         return () => clearTimeout(id);
     }, [filter])
 
-    function handleCloseNotice() {
-        setNotice({
-            message: "",
-            severity: "success",
-            open: false,
-        })
-    }
-
     function onTenantCreated() {
-        setNotice({
-            message: "Tenant created successfully",
-            severity: "success",
-            open: true,
-        })
+        showNotification("Tenant created successfully", "success");
 
         setCursor(null);
     }
@@ -112,17 +89,6 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
 
     return (
         <>
-            <Snackbar
-                open={notice.open}
-                autoHideDuration={5000}
-                onClose={handleCloseNotice}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert onClose={handleCloseNotice} severity={notice.severity} sx={{ width: '100%' }} variant="filled">
-                    {notice.message}
-                </Alert>
-            </Snackbar>
-
             <Box
                 sx={{
                     display: 'flex',

@@ -1,8 +1,7 @@
 import {useCreateRealm, useRealms} from "../hooks/useRealms.ts";
 import {
-    Alert,
     Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Link,
-    Paper, Snackbar,
+    Paper,
     Table,
     TableBody,
     TableCell,
@@ -15,18 +14,13 @@ import {
 import {useMemo, useState} from "react";
 import {RegExpValidator, useValidatedState} from "../hooks/useValidatedState.ts";
 import {Link as RouterLink} from "react-router";
+import {useNotification} from "../components/notifications.tsx";
 
 
 const REALM_NAME_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\- ]{0,99}$/;
 const REALM_SLUG_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\-]{0,49}$/;
 const REALM_NAME_VALIDATION_ERROR = "Realm name must be between 1 and 100 characters long and contain only letters, numbers, underscores, and dashes."
 const REALM_SLUG_VALIDATION_ERROR = "Realm slug must be between 1 and 50 characters long and start with a letter or underscore and contain only letters, numbers, underscores, and dashes."
-
-type Notice = {
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-    open: boolean;
-}
 
 export default function Dashboard() {
     const realmsQuery = useRealms();
@@ -55,11 +49,7 @@ export default function Dashboard() {
 
     const createRealm = useCreateRealm();
 
-    const [notice, setNotice] = useState<Notice>({
-        message: "",
-        severity: "success",
-        open: false,
-    })
+    const { showNotification } = useNotification();
 
     function handleCreateSubmit(event: any) {
         event.preventDefault();
@@ -70,11 +60,7 @@ export default function Dashboard() {
         }, {
             onSuccess: () => {
                 setSaving(false);
-                setNotice({
-                    message: "Realm created successfully",
-                    severity: "success",
-                    open: true,
-                })
+                showNotification("Realm created successfully!", "success");
                 setCreateOpen(false)
             }
         })
@@ -86,27 +72,8 @@ export default function Dashboard() {
         setRealmName("");
     }
 
-    function handleCloseNotice() {
-        setNotice({
-            message: "",
-            severity: "success",
-            open: false,
-        })
-    }
-
     return (
         <div>
-            <Snackbar
-                open={notice.open}
-                autoHideDuration={5000}
-                onClose={handleCloseNotice}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert onClose={handleCloseNotice} severity={notice.severity} sx={{ width: '100%' }} variant="filled">
-                    {notice.message}
-                </Alert>
-            </Snackbar>
-
             <h1>Admin Dashboard</h1>
 
             <Box

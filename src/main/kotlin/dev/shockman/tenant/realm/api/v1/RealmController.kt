@@ -5,6 +5,7 @@ import dev.shockman.tenant.tenant.application.TenantService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -43,5 +44,18 @@ class RealmController(val realmService: RealmService) {
     @GetMapping("/all")
     fun searchRealms(): List<RealmResponse> {
         return realmService.findAll().map { it.toResponse() }
+    }
+
+    @PatchMapping("/ids/{id}")
+    fun patchRealm(
+        @PathVariable id: UUID,
+        @RequestBody updateRequest: UpdateRealmRequest
+    ): RealmResponse {
+        val realm = realmService.findById(id)
+
+        realm.name = updateRequest.name
+        realm.slug = updateRequest.slug
+
+        return realmService.updateRealm(realm).toResponse()
     }
 }

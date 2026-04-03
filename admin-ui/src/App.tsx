@@ -3,6 +3,7 @@ import {Link, Route, Routes} from "react-router";
 import Dashboard from "./pages/Dashboard.tsx";
 import {AppBar, Container, Toolbar, Typography} from "@mui/material";
 import RealmPage from "./pages/RealmPage.tsx";
+import {NotificationProvider} from "./components/notifications.tsx";
 
 function App() {
   return (
@@ -24,10 +25,12 @@ function App() {
               </Toolbar>
           </AppBar>
           <Container maxWidth="lg" sx={{marginTop: 4}}>
-              <Routes>
-                  <Route path="/" index={true} element={<Dashboard/>} />
-                  <Route path="/realms/:id" element={<RealmPage />} />
-              </Routes>
+              <NotificationProvider>
+                  <Routes>
+                      <Route path="/" index={true} element={<Dashboard/>} />
+                      <Route path="/realms/:id" element={<RealmPage />} />
+                  </Routes>
+              </NotificationProvider>
           </Container>
       </>
   )

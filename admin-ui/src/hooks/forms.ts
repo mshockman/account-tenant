@@ -105,6 +105,7 @@ interface FormInputProps {
     helperText?: string;
     error?: boolean;
     onChange: (e: any) => void;
+    value?: any;
 }
 
 
@@ -191,6 +192,14 @@ export class Form {
         this.setInternalValue(key, value);
     }
 
+    setInitial(key: string, value: any): void {
+        if(!(key in this.config)) {
+            throw new Error(`Field ${key} does not exist in form`);
+        }
+
+        this.config[key].initial = value;
+    }
+
     reset() {
         this.setErrors({});
         this.errors = {};
@@ -224,7 +233,8 @@ export class Form {
         const r: FormInputProps = {
             onChange: (e: any) => {
                 this.set(key, e.target.value);
-            }
+            },
+            value: this.get(key),
         }
 
         if(typeof config.required === "boolean") {
@@ -254,6 +264,16 @@ export class Form {
         }
 
         return !this.isSaving();
+    }
+
+    hasChanged(): boolean {
+        for(const key in this.config) {
+            if(this.get(key) !== this.getFieldConfig(key).initial) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     hasErrors(): boolean {

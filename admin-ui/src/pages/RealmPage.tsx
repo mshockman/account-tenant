@@ -1,9 +1,11 @@
 import {Link, useParams} from "react-router";
 import {useGetRealm} from "../hooks/useRealms.ts";
-import {RealmPageHeader} from "../components/RealmPageHeader.tsx";
 import RealmTenants from "../components/RealmTenants.tsx";
 import {Box, Breadcrumbs, Tab, Tabs, Typography} from "@mui/material";
 import {useState} from "react";
+import {RealmEditor} from "../components/RealmEditor.tsx";
+import {RealmSettings} from "../components/RealmSettings.tsx";
+import * as React from "react";
 
 
 export default function RealmPage() {
@@ -12,9 +14,11 @@ export default function RealmPage() {
 
     const realmGet = useGetRealm(id as string);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
         setCurrentTab(newValue);
     }
+
+    if(realmGet.isLoading) return <div>Loading...</div>;
 
     return (
         <Box>
@@ -27,9 +31,11 @@ export default function RealmPage() {
             <Tabs value={currentTab} onChange={handleTabChange} aria-label="Realm Tabs" sx={{ marginBottom: 2 }}>
                 <Tab label="Realm" />
                 <Tab label="Tenants" />
+                <Tab label="Settings" />
             </Tabs>
-            {currentTab === 0 && <Box sx={{ marginBottom: 2 }}><RealmPageHeader data={realmGet.data} /></Box>}
+            {currentTab === 0 && <RealmEditor realm={realmGet.data!!} />}
             {currentTab === 1 && <RealmTenants realmId={id as string} query={null} cursor={null} limit={10} />}
+            {currentTab === 2 && <RealmSettings id={id as string} />}
         </Box>
     )
 }

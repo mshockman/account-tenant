@@ -5,7 +5,7 @@ import {
     getRealm,
     getRealms,
     searchRealmTenants, searchRealmTenantsCount,
-    type SearchRealmTenantsRequest
+    type SearchRealmTenantsRequest, updateRealm, type UpdateRealmRequest
 } from "../api/realms.ts";
 
 export function useRealms() {
@@ -56,5 +56,18 @@ export function useCreateRealmTenant() {
         onSuccess: (response) => {
             return queryClient.invalidateQueries({queryKey: ['search-realm-tenants', response.realmId]})
         },
+    })
+}
+
+
+export function useUpdateRealm() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: updateRealm,
+        onSuccess: (response) => {
+            queryClient.setQueryData(['realm', response.id], response)
+            return queryClient.invalidateQueries({queryKey: ['realms']})
+        }
     })
 }

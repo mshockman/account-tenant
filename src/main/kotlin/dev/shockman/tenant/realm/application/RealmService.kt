@@ -3,6 +3,7 @@ package dev.shockman.tenant.realm.application
 import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
 import dev.shockman.tenant.api.messages.RealmCreatedEvent
 import dev.shockman.tenant.api.messages.RealmDeletedEvent
+import dev.shockman.tenant.api.messages.RealmUpdatedEvent
 import dev.shockman.tenant.realm.api.v1.CreateRealmRequest
 import dev.shockman.tenant.realm.persistance.Realm
 import dev.shockman.tenant.realm.persistance.RealmRepository
@@ -41,6 +42,26 @@ class RealmService(
 
         outboxService.send(
             RealmCreatedEvent(
+                realmId = realm.id,
+                name = realm.name,
+                slug = realm.slug,
+                version = realm.version,
+                createdAt = requireNotNull(realm.createdAt) { "Realm created at timestamp is null." },
+                updatedAt = requireNotNull(realm.updatedAt) { "Realm updated at timestamp is null." }
+            )
+        )
+
+        return realm
+    }
+
+    @Transactional
+    fun updateRealm(realm: Realm): Realm {
+        requireNotNull(realm.id) { "Realm id is null." }
+
+        val realm = repository.saveAndFlush(realm)
+
+        outboxService.send(
+            RealmUpdatedEvent(
                 realmId = realm.id,
                 name = realm.name,
                 slug = realm.slug,

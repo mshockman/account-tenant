@@ -2,6 +2,7 @@ import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormCont
 import {RegExValidator, useForm} from "../hooks/forms.ts";
 import {useCreateRealmTenant} from "../hooks/useRealms.ts";
 import type {CreateRealmTenantRequest, RealmTenantResponse} from "../api/realms.ts";
+import {useNotification} from "./notifications.tsx";
 
 interface CreateRealmTenantDialogProps {
     isOpen: boolean;
@@ -11,13 +12,15 @@ interface CreateRealmTenantDialogProps {
 }
 
 
-const TENANT_NAME_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\- ]{0,99}$/;
-const TENANT_SLUG_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\-]{0,49}$/;
-const TENANT_NAME_VALIDATION_ERROR = "Tenant name must be between 1 and 100 characters long and contain only letters, numbers, underscores, and dashes."
-const TENANT_SLUG_VALIDATION_ERROR = "Tenant slug must start with a letter and only contain letters, numbers, underscores, and dashes."
+export const TENANT_NAME_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\- ]{0,99}$/;
+export const TENANT_SLUG_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\-]{0,49}$/;
+export const TENANT_NAME_VALIDATION_ERROR = "Tenant name must be between 1 and 100 characters long and contain only letters, numbers, underscores, and dashes."
+export const TENANT_SLUG_VALIDATION_ERROR = "Tenant slug must start with a letter and only contain letters, numbers, underscores, and dashes."
+
 
 export function CreateRealmTenantDialog({isOpen, onClose, realmId, onCreate}: CreateRealmTenantDialogProps) {
     const createRealmTenant = useCreateRealmTenant();
+    const { showNotification } = useNotification();
 
     const form = useForm({
         onSubmit: async (form) => {
@@ -30,6 +33,10 @@ export function CreateRealmTenantDialog({isOpen, onClose, realmId, onCreate}: Cr
                     form.reset();
                     handleCloseDialog();
                     onCreate?.(response);
+                },
+
+                onError: () => {
+                    showNotification("Something went wrong!", "error");
                 }
             })
         },

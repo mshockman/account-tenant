@@ -21,7 +21,7 @@ class Realm(
     var name: String,
 
     @Column(nullable = false, unique = true, length = 50)
-    val slug: String,
+    var slug: String,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
