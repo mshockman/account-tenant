@@ -1,11 +1,11 @@
 import {Box, Breadcrumbs, Tab, Tabs, Typography} from "@mui/material";
 import {Link, redirect, useParams} from "react-router";
 import * as React from "react";
-import {useGetRealm} from "../hooks/useRealms.ts";
-import {useTenant} from "../hooks/useTenants.ts";
 import {requireDefined} from "../shared/assertions.ts";
 import {useState} from "react";
-import {TenantEditor} from "../components/TenantEditor.tsx";
+import {useTenant} from "./api/useTenants.ts";
+import {useGetRealm} from "../realms/api/useRealms.ts";
+import {TenantEditor} from "./components/TenantEditor.tsx";
 
 
 export function TenantPage() {

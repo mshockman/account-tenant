@@ -1,8 +1,8 @@
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, TextField} from "@mui/material";
-import {RegExValidator, useForm} from "../hooks/forms.ts";
-import {useCreateRealmTenant} from "../hooks/useRealms.ts";
+import {useNotification} from "../../shared/components/notifications.tsx";
+import {RegExValidator, useForm} from "../../shared/hooks/forms.ts";
 import type {CreateRealmTenantRequest, RealmTenantResponse} from "../api/realms.ts";
-import {useNotification} from "./notifications.tsx";
+import {useCreateRealmTenant} from "../api/useRealms.ts";
 
 interface CreateRealmTenantDialogProps {
     isOpen: boolean;

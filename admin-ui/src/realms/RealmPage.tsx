@@ -1,11 +1,11 @@
 import {Link, useParams} from "react-router";
-import {useGetRealm} from "../hooks/useRealms.ts";
-import RealmTenants from "../components/RealmTenants.tsx";
 import {Box, Breadcrumbs, Tab, Tabs, Typography} from "@mui/material";
 import {useState} from "react";
-import {RealmEditor} from "../components/RealmEditor.tsx";
-import {RealmSettings} from "../components/RealmSettings.tsx";
 import * as React from "react";
+import {useGetRealm} from "./api/useRealms.ts";
+import {RealmEditor} from "./components/RealmEditor.tsx";
+import RealmTenants from "../realms/components/RealmTenants.tsx";
+import {RealmSettings} from "./components/RealmSettings.tsx";
 
 
 export default function RealmPage() {

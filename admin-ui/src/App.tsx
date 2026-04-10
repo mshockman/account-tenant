@@ -2,9 +2,9 @@ import './App.css'
 import {Link, Route, Routes} from "react-router";
 import Dashboard from "./pages/Dashboard.tsx";
 import {AppBar, Container, Toolbar, Typography} from "@mui/material";
-import RealmPage from "./pages/RealmPage.tsx";
-import {NotificationProvider} from "./components/notifications.tsx";
-import {TenantPage} from "./pages/TenantPage.tsx";
+import {NotificationProvider} from "./shared/components/notifications.tsx";
+import RealmPage from "./realms/RealmPage.tsx";
+import {TenantPage} from "./tenants/TenantPage.tsx";
 
 function App() {
   return (

@@ -1,15 +1,15 @@
 import type {Realm} from "../api/realms.ts";
 import {Box, Button, TextField} from "@mui/material";
-import {RegExValidator, useForm} from "../hooks/forms.ts";
 import {
     TENANT_NAME_REGEX,
     TENANT_NAME_VALIDATION_ERROR,
     TENANT_SLUG_REGEX,
     TENANT_SLUG_VALIDATION_ERROR
 } from "./CreateRealmTenantDialog.tsx";
-import {useUpdateRealm} from "../hooks/useRealms.ts";
-import {useNotification} from "./notifications.tsx";
-import {slotProps} from "../shared/slotProps.ts";
+import {RegExValidator, useForm} from "../../shared/hooks/forms.ts";
+import {useUpdateRealm} from "../api/useRealms.ts";
+import {useNotification} from "../../shared/components/notifications.tsx";
+import {slotProps} from "../../shared/slotProps.ts";
 
 
 export function RealmEditor(

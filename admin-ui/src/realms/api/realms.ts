@@ -1,5 +1,5 @@
-import {apiFetch} from "./http.ts";
-import type {TenantResponse} from "./TenantResponse.ts";
+import type {TenantResponse} from "../../tenants/api/TenantResponse.ts";
+import {apiFetch} from "../../shared/http.ts";
 
 
 export interface Realm {

@@ -1,4 +1,3 @@
-import {useCreateRealm, useRealms} from "../hooks/useRealms.ts";
 import {
     Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Link,
     Paper,
@@ -12,9 +11,10 @@ import {
     Typography
 } from "@mui/material";
 import {useMemo, useState} from "react";
-import {RegExpValidator, useValidatedState} from "../hooks/useValidatedState.ts";
 import {Link as RouterLink} from "react-router";
-import {useNotification} from "../components/notifications.tsx";
+import {useCreateRealm, useRealms} from "../realms/api/useRealms.ts";
+import {RegExpValidator, useValidatedState} from "../shared/hooks/useValidatedState.ts";
+import {useNotification} from "../shared/components/notifications.tsx";
 
 
 const REALM_NAME_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\- ]{0,99}$/;

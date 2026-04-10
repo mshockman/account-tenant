@@ -1,5 +1,5 @@
 import {useQuery} from "@tanstack/react-query";
-import {getTenant} from "../api/tenants.ts";
+import {getTenant} from "./tenants.ts";
 
 
 export function useTenant(id: string) {

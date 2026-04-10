@@ -1,4 +1,3 @@
-import {useSearchRealmTenants, useSearchRealmTenantsCount} from "../hooks/useRealms.ts";
 import {type ReactNode, useEffect, useState} from "react";
 import {
     Box,
@@ -14,7 +13,8 @@ import {
 } from "@mui/material";
 import {Link as RouterLink} from "react-router";
 import {CreateRealmTenantDialog} from "./CreateRealmTenantDialog.tsx";
-import {useNotification} from "./notifications.tsx";
+import {useNotification} from "../../shared/components/notifications.tsx";
+import {useSearchRealmTenants, useSearchRealmTenantsCount} from "../api/useRealms.ts";
 
 export default function RealmTenants({realmId, query=null, cursor=null, limit=10}: {realmId: string, query: string | null, cursor: string | null, limit: number}) {
     const [currentQuery, setCurrentQuery] = useState<string | null>(query);

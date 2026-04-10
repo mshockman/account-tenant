@@ -1,12 +1,12 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {
-    createRealm,
-    createRealmTenant,
+    createRealm, createRealmTenant,
     getRealm,
     getRealms,
-    searchRealmTenants, searchRealmTenantsCount,
+    searchRealmTenants,
+    searchRealmTenantsCount,
     type SearchRealmTenantsRequest, updateRealm
-} from "../api/realms.ts";
+} from "./realms.ts";
 
 export function useRealms() {
     return useQuery({
