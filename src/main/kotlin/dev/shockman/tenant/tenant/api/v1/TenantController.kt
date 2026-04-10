@@ -33,7 +33,7 @@ class TenantController(
         return tenantService.create(realm, tenant).toResponse()
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/ids/{id}")
     fun getTenant(
         @PathVariable id: UUID,
     ): TenantResponse {

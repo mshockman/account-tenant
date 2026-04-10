@@ -80,7 +80,7 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
     const tenantRows: ReactNode[] = searchTenants.data?.tenants?.map(item => (
         <TableRow key={item.id}>
             <TableCell>
-                <Link component={RouterLink} to={`/realms/${item.id}`}>{item.id}</Link>
+                <Link component={RouterLink} to={`/realms/tenants/${item.id}`}>{item.id}</Link>
             </TableCell>
             <TableCell>{item.name}</TableCell>
             <TableCell>{item.slug}</TableCell>

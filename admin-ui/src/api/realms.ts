@@ -1,4 +1,5 @@
 import {apiFetch} from "./http.ts";
+import type {TenantResponse} from "./TenantResponse.ts";
 
 
 export interface Realm {
@@ -7,17 +8,6 @@ export interface Realm {
     name: string;
     createdAt: string;
     updatedAt: string;
-}
-
-
-export interface TenantResponse {
-    id: string;
-    slug: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-    enabled: boolean;
-    realmId: string;
 }
 
 

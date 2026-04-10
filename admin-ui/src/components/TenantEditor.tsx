@@ -1,52 +1,30 @@
-import type {Realm} from "../api/realms.ts";
+import type {TenantResponse} from "../api/TenantResponse.ts";
 import {Box, Button, TextField} from "@mui/material";
+import {slotProps} from "../shared/slotProps.ts";
 import {RegExValidator, useForm} from "../hooks/forms.ts";
+import type {CreateRealmTenantRequest} from "../api/realms.ts";
 import {
     TENANT_NAME_REGEX,
     TENANT_NAME_VALIDATION_ERROR,
     TENANT_SLUG_REGEX,
     TENANT_SLUG_VALIDATION_ERROR
 } from "./CreateRealmTenantDialog.tsx";
-import {useUpdateRealm} from "../hooks/useRealms.ts";
-import {useNotification} from "./notifications.tsx";
-import {slotProps} from "../shared/slotProps.ts";
 
 
-export function RealmEditor(
-    {realm}: {
-        realm: Realm
+export function TenantEditor(
+    {
+        tenant
+    }: {
+        tenant: TenantResponse
     }
 ) {
-    const realmUpdater = useUpdateRealm()
-    const { showNotification } = useNotification();
-
     const form = useForm({
         onSubmit: async (form) => {
-            // noinspection JSUnusedGlobalSymbols
-            return realmUpdater.mutate(
-                {
-                    id: realm.id,
-                    ...form.validate(),
-                } as any,
-                {
-                    onSuccess: (response) => {
-                        form.setInitial("name", response.name);
-                        form.setInitial("slug", response.slug);
-                        form.reset();
-                        showNotification("Realm updated successfully", "success");
-                    },
 
-                    onError: (error) => {
-                        console.log(error);
-                        showNotification("Something went wrong!", "error");
-                    }
-                }
-            )
         },
-
         fields: {
             name: {
-                initial: realm?.name ?? "",
+                initial: tenant.name,
                 required: true,
                 nullable: false,
                 validators: [
@@ -55,7 +33,7 @@ export function RealmEditor(
             },
 
             slug: {
-                initial: realm?.slug ?? "",
+                initial: tenant.slug,
                 required: true,
                 nullable: false,
                 validators: [
@@ -65,16 +43,17 @@ export function RealmEditor(
         }
     })
 
+
     return (
         <Box sx={{ marginBottom: 2, padding: 2, flexGrow: 1, display: "flex", flexDirection: "column", gap: 5}} component="form" {...form.form()}>
             <Box>
-                <TextField fullWidth={true} label="Realm ID" value={realm?.id ?? ""} />
+                <TextField fullWidth={true} label="Tenant ID" value={tenant.id} />
             </Box>
             <Box>
-                <TextField fullWidth={true} label="Created At" value={realm?.createdAt ?? ""} />
+                <TextField fullWidth={true} label="Created At" value={tenant.createdAt ?? ""} />
             </Box>
             <Box>
-                <TextField fullWidth={true} label="Updated At" value={realm?.updatedAt ?? ""} />
+                <TextField fullWidth={true} label="Updated At" value={tenant.updatedAt ?? ""} />
             </Box>
             <Box>
                 <TextField fullWidth={true} label="Name" {...form.field("name")} {...slotProps(100, true)} />

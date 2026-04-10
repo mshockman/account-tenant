@@ -5,7 +5,7 @@ import {
     getRealm,
     getRealms,
     searchRealmTenants, searchRealmTenantsCount,
-    type SearchRealmTenantsRequest, updateRealm, type UpdateRealmRequest
+    type SearchRealmTenantsRequest, updateRealm
 } from "../api/realms.ts";
 
 export function useRealms() {
@@ -27,10 +27,11 @@ export function useCreateRealm() {
     })
 }
 
-export function useGetRealm(id: string) {
+export function useGetRealm(id: string | null | undefined) {
     return useQuery({
         queryKey: ['realm', id],
-        queryFn: () => getRealm(id),
+        queryFn: () => getRealm(id!),
+        enabled: !!id
     })
 }
 

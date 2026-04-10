@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import {AppBar, Container, Toolbar, Typography} from "@mui/material";
 import RealmPage from "./pages/RealmPage.tsx";
 import {NotificationProvider} from "./components/notifications.tsx";
+import {TenantPage} from "./pages/TenantPage.tsx";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
                           cursor: 'pointer',
                       }}
                   >
-                      Admin
+                      Tenant Service Admin Panel
                   </Typography>
               </Toolbar>
           </AppBar>
@@ -29,6 +30,7 @@ function App() {
                   <Routes>
                       <Route path="/" index={true} element={<Dashboard/>} />
                       <Route path="/realms/:id" element={<RealmPage />} />
+                      <Route path="/realms/tenants/:id" element={<TenantPage />} />
                   </Routes>
               </NotificationProvider>
           </Container>
