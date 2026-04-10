@@ -1,7 +1,13 @@
 package dev.shockman.tenant.accounts.api.v1
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import dev.shockman.tenant.accounts.application.AccountService
+import dev.shockman.tenant.realm.application.RealmService
+import dev.shockman.tenant.shared.toUUIDOrNull
+import dev.shockman.tenant.tenant.application.MatchedCursor
 import dev.shockman.tenant.tenant.application.TenantService
+import dev.shockman.tenant.tenant.application.toCursorString
+import dev.shockman.tenant.tenant.application.toMatchedCursor
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +24,9 @@ import java.util.UUID
 @RequestMapping("/api/v1/accounts")
 class AccountController(
     private val tenantService: TenantService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val objectMapper: ObjectMapper,
+    private val realmService: RealmService
 ) {
     @PostMapping("/create")
     fun createTenantAccount(
@@ -51,5 +59,46 @@ class AccountController(
     ) {
         val account = accountService.getAccountById(accountId)
         return accountService.delete(account)
+    }
+
+    @PostMapping("/search")
+    fun searchAccounts(@RequestBody searchAccountRequest: SearchAccountRequest): SearchAccountResponse {
+        val tenant = searchAccountRequest.tenantId?.let { tenantService.findById(it) }
+
+        val filterId = searchAccountRequest.query?.toUUIDOrNull()
+
+        val cursor = searchAccountRequest.cursor?.toMatchedCursor(objectMapper)
+
+        val realm = searchAccountRequest.realmId?.let { realmService.findById(it) }
+
+        val accounts = accountService.searchAccounts(
+            tenant,
+            searchAccountRequest.limit + 1,
+            searchAccountRequest.query,
+            cursor,
+            realm=realm
+        ).map { it.toRealmTenantAccount() }.toMutableList()
+
+        val nextCursor = if (accounts.size > searchAccountRequest.limit) {
+            accounts.removeLast()
+
+            accounts.lastOrNull()?.let {
+                MatchedCursor(
+                    when (filterId) {
+                        null -> null
+                        it.id -> 0
+                        else -> 1
+                    },
+                    it.createdAt,
+                    it.id
+                )
+            }
+        } else null
+
+        return SearchAccountResponse(
+            accounts,
+            tenant?.id,
+            nextCursor?.toCursorString(objectMapper)
+        )
     }
 }

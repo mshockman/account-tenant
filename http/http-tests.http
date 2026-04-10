@@ -70,3 +70,14 @@ Accept: application/json
   "limit": 2,
   "query": "test"
 }
+
+
+### Search for a tenant next cursor
+POST http://localhost:8180/api/v1/accounts/search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "limit": 20,
+  "realmId": "5552452f-2c47-41d9-a1e2-be4a8868bbd6"
+}

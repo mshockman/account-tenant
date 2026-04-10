@@ -3,11 +3,16 @@ package dev.shockman.tenant.accounts.application
 import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
 import dev.shockman.tenant.accounts.persistance.Account
 import dev.shockman.tenant.accounts.persistance.AccountRepository
+import dev.shockman.tenant.accounts.persistance.specifications.AccountFilterSpecification
 import dev.shockman.tenant.api.messages.AccountCreatedEvent
 import dev.shockman.tenant.api.messages.AccountDeletedEvent
 import dev.shockman.tenant.api.messages.AccountUpdatedEvent
 import dev.shockman.tenant.accounts.api.v1.CreateAccountRequest
 import dev.shockman.tenant.accounts.api.v1.UpdateAccountRequest
+import dev.shockman.tenant.realm.persistance.Realm
+import dev.shockman.tenant.shared.applyIfNotNull
+import dev.shockman.tenant.shared.toUUIDOrNull
+import dev.shockman.tenant.tenant.application.MatchedCursor
 import dev.shockman.tenant.tenant.persistance.Tenant
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
@@ -102,6 +107,26 @@ class AccountService(
         )
 
         return updatedAccount
+    }
+
+    fun searchAccounts(tenant: Tenant?, limit: Int?, query: String?, cursor: MatchedCursor?, realm: Realm?): List<Account> {
+        val filteredId = query?.toUUIDOrNull()
+
+        val spec = (if (tenant != null) AccountFilterSpecification.byTenant(tenant) else AccountFilterSpecification.ordered())
+            .applyIfNotNull(query) { spec, filter ->
+                spec.and(AccountFilterSpecification.matchesFilter(filter, filteredId))
+            }
+            .applyIfNotNull(cursor) { spec, c ->
+                spec.and(AccountFilterSpecification.afterCursorCreatedAt(c, filteredId))
+            }.applyIfNotNull(realm) { spec, r ->
+                spec.and(AccountFilterSpecification.byRealm(r))
+            }
+
+        return accountRepository.findBy(spec) { q ->
+            q.applyIfNotNull(limit) { q2, v ->
+                q2.limit(v)
+            }.all()
+        }
     }
 
     @Transactional
