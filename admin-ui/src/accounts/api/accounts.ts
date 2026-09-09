@@ -32,8 +32,22 @@ export function searchAccount(request: AccountSearchRequest) {
 
 
 export function useSearchAccounts(request: AccountSearchRequest) {
+    const realmId = request.realmId ?? null;
+    const tenantId = request.tenantId ?? null;
+    const cursor = request.cursor ?? null;
+    const limit = request.limit;
+    const query = request.query ?? null;
+    const scope: { realmId: string | null, tenantId: string | null } = { realmId, tenantId };
+
     return useQuery({
-        queryKey: ['search-accounts', request.realmId ?? null, request.tenantId ?? null, request.query ?? null, request.limit, request.cursor ?? null],
+        queryKey: [
+            'accounts',
+            'search',
+            scope,
+            query,
+            limit,
+            cursor
+        ],
         queryFn: () => searchAccount(request),
     })
 }

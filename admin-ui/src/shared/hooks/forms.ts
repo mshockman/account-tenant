@@ -72,7 +72,7 @@ export class LengthValidator implements IValidator {
     }
 
     test(value: any): boolean {
-        if(!("length" in value)) {
+        if(typeof value !== "string" && !("length" in value)) {
             throw new Error('Value must have a length property');
         }
 
@@ -86,12 +86,12 @@ export class LengthValidator implements IValidator {
     }
 }
 
-
 interface FieldConfig {
     required?: boolean;
     nullable?: boolean;
     validators?: IValidator[];
     initial: any;
+    onEmpty?: () => any;
 }
 
 
@@ -117,6 +117,11 @@ interface FormConfig {
 
 interface FormElementProps {
     onSubmit: (e: any) => void;
+}
+
+
+export function NULL() {
+    return null;
 }
 
 
@@ -232,7 +237,11 @@ export class Form {
 
         const r: FormInputProps = {
             onChange: (e: any) => {
-                this.set(key, e.target.value);
+                if(config.onEmpty && e.target.value === "") {
+                    this.set(key, config.onEmpty());
+                } else {
+                    this.set(key, e.target.value);
+                }
             },
             value: this.get(key),
         }
@@ -292,7 +301,7 @@ export class Form {
                 this.isSubmittingSetter(true);
                 await this.onSubmit(this);
                 this.isSubmittingSetter(false);
-                this.reset();
+                // this.reset();
             }
         }
     }

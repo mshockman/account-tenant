@@ -34,13 +34,13 @@ export interface FilterDataTableProps {
     columns: FilterDataTableColumn[];
     fetchApi: DataTableFetchFunction;
     title: string;
-    actions?: JSX.Element[];
+    actions?: JSX.Element;
 }
 
 
 export function FilterDataTable(
     {
-        columns, fetchApi, title, actions = []
+        columns, fetchApi, title, actions
     }: FilterDataTableProps
 ) {
     const [query, setQuery] = useState<string>("")

@@ -1,7 +1,8 @@
 import {useSearchAccounts} from "../api/accounts.ts";
-import {Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import * as React from "react";
 import {type DataTableFetchFunction, FilterDataTable} from "../../shared/components/FilteredDataTable.tsx";
+import {CreateAccountDialog} from "./CreateAccountDialog.tsx";
 
 
 export interface AccountTabProps {
@@ -13,6 +14,8 @@ export interface AccountTabProps {
 export function AccountTab(
     { realmId = null, tenantId = null }: AccountTabProps = { realmId: null, tenantId: null }
 ) {
+    const [open, setOpen] = React.useState(false);
+
     const fetchAccounts: DataTableFetchFunction = (query: string | null = null, cursor: string | null = null) => {
         const r = useSearchAccounts({
             realmId: realmId,
@@ -52,7 +55,11 @@ export function AccountTab(
                 ]}
                 title={"Accounts"}
                 fetchApi={fetchAccounts}
+                actions={
+                    tenantId ? <Button type="button" onClick={() => setOpen(true)}>Create Account</Button> : undefined
+                }
             />
+            {tenantId && <CreateAccountDialog setOpen={setOpen} isOpen={open} tenantId={tenantId} />}
         </Box>
     )
 }

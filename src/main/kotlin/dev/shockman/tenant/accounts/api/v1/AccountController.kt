@@ -8,6 +8,7 @@ import dev.shockman.tenant.tenant.application.MatchedCursor
 import dev.shockman.tenant.tenant.application.TenantService
 import dev.shockman.tenant.tenant.application.toCursorString
 import dev.shockman.tenant.tenant.application.toMatchedCursor
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,7 +31,7 @@ class AccountController(
 ) {
     @PostMapping("/create")
     fun createTenantAccount(
-        @RequestBody createAccountRequest: CreateAccountRequest
+        @Valid @RequestBody createAccountRequest: CreateAccountRequest
     ): RealmTenantAccountResponse {
         val tenant = tenantService.findById(createAccountRequest.tenantId)
         return accountService.create(tenant, createAccountRequest).toRealmTenantAccount()
