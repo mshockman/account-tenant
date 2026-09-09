@@ -1,0 +1,10 @@
+
+
+# Search Accounts
+POST http://localhost:8180/api/v1/accounts/search
+Content-Type: application/json
+
+{
+  "limit": 1,
+  "cursor": "eyJyYW5rIjpudWxsLCJhZnRlciI6IjIwMjYtMDMtMDlUMDY6MjM6MjAuNTE0OTE3WiIsImlkIjoiMDdjOWM3OTgtZTJhZi00ZDc0LWIyMmQtNGVjOTA5NDcxNzczIn0="
+}

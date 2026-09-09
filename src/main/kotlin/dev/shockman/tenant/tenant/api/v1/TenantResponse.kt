@@ -11,7 +11,8 @@ data class TenantResponse(
     val createdAt: Instant,
     val updatedAt: Instant,
     val enabled: Boolean,
-    val realmId: UUID
+    val realmId: UUID,
+    val realmName: String
 )
 
 fun Tenant.toResponse(): TenantResponse {
@@ -22,6 +23,7 @@ fun Tenant.toResponse(): TenantResponse {
         createdAt = requireNotNull(createdAt) { "created timestamp is required" },
         updatedAt = requireNotNull(updatedAt) { "updated timestamp is required" },
         enabled = enabled,
-        realmId = realm.id
+        realmId = realm.id,
+        realmName = realm.name
     )
 }

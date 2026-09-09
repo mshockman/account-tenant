@@ -16,6 +16,7 @@ import dev.shockman.tenant.tenant.application.MatchedCursor
 import dev.shockman.tenant.tenant.persistance.Tenant
 import io.micrometer.tracing.Tracer
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -109,7 +110,24 @@ class AccountService(
         return updatedAccount
     }
 
+    @Transactional(readOnly = true)
     fun searchAccounts(tenant: Tenant?, limit: Int?, query: String?, cursor: MatchedCursor?, realm: Realm?): List<Account> {
+        val spec = getSearchAccountsSpec(tenant, query, cursor, realm, true)
+
+        return accountRepository.findBy(spec) { q ->
+            q.applyIfNotNull(limit) { q2, v ->
+                q2.limit(v)
+            }.all()
+        }
+    }
+
+    fun countSearchAccounts(tenant: Tenant?, query: String?, realm: Realm?): Long {
+        val spec = getSearchAccountsSpec(tenant, query, null, realm, false)
+
+        return accountRepository.count(spec)
+    }
+
+    private fun getSearchAccountsSpec(tenant: Tenant?, query: String?, cursor: MatchedCursor?, realm: Realm?, fetchAssociations: Boolean): Specification<Account> {
         val filteredId = query?.toUUIDOrNull()
 
         val spec = (if (tenant != null) AccountFilterSpecification.byTenant(tenant) else AccountFilterSpecification.ordered())
@@ -118,15 +136,15 @@ class AccountService(
             }
             .applyIfNotNull(cursor) { spec, c ->
                 spec.and(AccountFilterSpecification.afterCursorCreatedAt(c, filteredId))
-            }.applyIfNotNull(realm) { spec, r ->
-                spec.and(AccountFilterSpecification.byRealm(r))
+            }.let { spec ->
+                if (realm != null) spec.and(AccountFilterSpecification.byRealm(realm))
+                else spec
+            }.let { spec ->
+                if(fetchAssociations) spec.and(AccountFilterSpecification.fetchTenantAndRealm())
+                else spec
             }
 
-        return accountRepository.findBy(spec) { q ->
-            q.applyIfNotNull(limit) { q2, v ->
-                q2.limit(v)
-            }.all()
-        }
+        return spec
     }
 
     @Transactional

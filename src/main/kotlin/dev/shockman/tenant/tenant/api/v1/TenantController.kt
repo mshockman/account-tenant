@@ -37,7 +37,7 @@ class TenantController(
     fun getTenant(
         @PathVariable id: UUID,
     ): TenantResponse {
-        return tenantService.findById(id).toResponse()
+        return tenantService.findByIdWithRealm(id).toResponse()
     }
 
     @PatchMapping("/{id}")

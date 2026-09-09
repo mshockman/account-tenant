@@ -95,10 +95,14 @@ class AccountController(
             }
         } else null
 
+        val count = accountService.countSearchAccounts(tenant, searchAccountRequest.query, realm=realm)
+
         return SearchAccountResponse(
             accounts,
             tenant?.id,
-            nextCursor?.toCursorString(objectMapper)
+            realm?.id,
+            nextCursor?.toCursorString(objectMapper),
+            count
         )
     }
 }

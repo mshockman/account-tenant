@@ -36,6 +36,10 @@ class TenantService(
         return tenantRepository.findById(id).orElseThrow { EntityNotFoundException("Tenant not found.") }
     }
 
+    fun findByIdWithRealm(id: UUID): Tenant {
+        return tenantRepository.findByIdWithRealm(id) ?: throw EntityNotFoundException("Tenant not found.")
+    }
+
     @Transactional
     fun create(realm: Realm, createdTenant: CreateTenantRequest): Tenant {
         val tenant = tenantRepository.saveAndFlush(

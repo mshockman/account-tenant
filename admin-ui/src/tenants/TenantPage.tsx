@@ -6,6 +6,7 @@ import {useState} from "react";
 import {useTenant} from "./api/useTenants.ts";
 import {useGetRealm} from "../realms/api/useRealms.ts";
 import {TenantEditor} from "./components/TenantEditor.tsx";
+import {AccountTab} from "../accounts/components/AccountTab.tsx";
 
 
 export function TenantPage() {
@@ -47,15 +48,6 @@ export function TenantPage() {
             </Tabs>
             { currentTab === 0 && <TenantEditor tenant={tenantGetter.data!!} /> }
             { currentTab === 1 && <AccountTab /> }
-        </Box>
-    )
-}
-
-
-function AccountTab() {
-    return (
-        <Box>
-            <h1>Accounts</h1>
         </Box>
     )
 }

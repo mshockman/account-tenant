@@ -7,6 +7,9 @@ import java.util.UUID
 data class RealmTenantAccountResponse(
     val id: UUID,
     val tenantId: UUID,
+    val tenantName: String,
+    val realmId: UUID,
+    val realmName: String,
     val username: String,
     val firstName: String?,
     val lastName: String?,
@@ -23,6 +26,9 @@ fun Account.toRealmTenantAccount(): RealmTenantAccountResponse {
     return RealmTenantAccountResponse(
         id = id,
         tenantId = tenant.id,
+        tenantName = tenant.name,
+        realmId = tenant.realm.id,
+        realmName = tenant.realm.name,
         username = username,
         firstName = firstName,
         lastName = lastName,

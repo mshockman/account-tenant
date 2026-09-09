@@ -24,6 +24,13 @@ object AccountFilterSpecification {
         }
     }
 
+    fun fetchTenantAndRealm(): Specification<Account> {
+        return Specification { root, _, _ ->
+            root.fetch<Account, Tenant>("tenant").fetch<Tenant, Realm>("realm")
+            null
+        }
+    }
+
     fun byRealm(realm: Realm): Specification<Account> {
         return Specification { root, query, cb ->
             val idColumn = root.get<UUID>("id")
@@ -34,7 +41,9 @@ object AccountFilterSpecification {
                 cb.asc(idColumn)
             )
 
-            cb.equal(root.join<Account, Tenant>("tenant").get<Realm>("realm"), realm)
+            @Suppress("UNCHECKED_CAST")
+            val tenantJoin = root.join<Account, Tenant>("tenant")
+            cb.equal(tenantJoin.get<Realm>("realm"), realm)
         }
     }
 

@@ -1,5 +1,6 @@
 import {apiFetch} from "../../shared/http.ts";
-import type {TenantResponse} from "../../tenants/api/TenantResponse.ts";
+import {useQuery} from "@tanstack/react-query";
+import type Account from "../persistance/Account.ts";
 
 
 export interface AccountSearchRequest {
@@ -11,12 +12,28 @@ export interface AccountSearchRequest {
 }
 
 
+export interface AccountSearchResponse {
+    cursor: string | null;
+    accounts: Account[];
+    tenantId: string | null;
+    count: number;
+}
+
+
 export function searchAccount(request: AccountSearchRequest) {
-    return apiFetch<TenantResponse>(
+    return apiFetch<AccountSearchResponse>(
         `/api/v1/accounts/search`,
         {
             method: 'POST',
             body: JSON.stringify(request)
         }
     )
+}
+
+
+export function useSearchAccounts(request: AccountSearchRequest) {
+    return useQuery({
+        queryKey: ['search-accounts', request.realmId ?? null, request.tenantId ?? null, request.query ?? null, request.limit, request.cursor ?? null],
+        queryFn: () => searchAccount(request),
+    })
 }
