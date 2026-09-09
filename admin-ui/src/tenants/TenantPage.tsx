@@ -47,7 +47,7 @@ export function TenantPage() {
                 <Tab label="Settings" />
             </Tabs>
             { currentTab === 0 && <TenantEditor tenant={tenantGetter.data!!} /> }
-            { currentTab === 1 && <AccountTab /> }
+            { currentTab === 1 && <AccountTab tenantId={id} /> }
         </Box>
     )
 }
