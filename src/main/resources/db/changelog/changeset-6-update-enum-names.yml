@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: Matthew Shockman
+      changes:
+        - sql:
+            sql: >
+              ALTER TYPE link_request_status
+              RENAME VALUE 'pending' TO 'PENDING';
+  
+              ALTER TYPE link_request_status
+              RENAME VALUE 'accepted' TO 'ACCEPTED';
+              
+              ALTER TYPE link_request_status
+              RENAME VALUE 'canceled' TO 'CANCELED';
+              
+              ALTER TYPE identity_link_request_type RENAME VALUE 'email' TO 'EMAIL';
+              ALTER TYPE identity_link_request_type RENAME VALUE 'phone' TO 'PHONE';
+      rollback:
+        - sql:
+            sql: >
+              ALTER TYPE link_request_status
+              RENAME VALUE 'PENDING' TO 'pending';
+
+              ALTER TYPE link_request_status
+              RENAME VALUE 'ACCEPTED' TO 'accepted';
+
+              ALTER TYPE link_request_status
+              RENAME VALUE 'CANCELED' TO 'canceled';
+
+              ALTER TYPE identity_link_request_type RENAME VALUE 'EMAIL' TO 'email';
+              ALTER TYPE identity_link_request_type RENAME VALUE 'PHONE' TO 'phone';

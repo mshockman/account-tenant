@@ -14,4 +14,6 @@
     <!--suppress XmlPathReference -->
     <include file="dev/shockman/messaging/message/storage/jdbc/postgres/liquibase/changelog/outbox/outbox.yaml"/>
 
+    <include file="db/changelog/changeset-6-update-enum-names.yml"/>
+
 </databaseChangeLog>

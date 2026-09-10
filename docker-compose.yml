@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: tenant-service-db
     ports:
       - "25432:5432"
+    volumes:
+      - ./docker/init-postgres/init-keycloak-db.sql:/docker-entrypoint-initdb.d/init-keycloak-db.sql
   kafka:
     image: apache/kafka:4.1.0
     container_name: tenant-service-kafka
@@ -29,3 +31,25 @@ services:
       KAFKA_NUM_PARTITIONS: 3
     ports:
       - "29092:9092"
+  mailcatcher:
+    restart: on-failure
+    image: dockage/mailcatcher:0.9.0
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.3
+    container_name: tenant-service-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://database:5432/keycloak-db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: test1234
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database

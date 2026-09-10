@@ -29,7 +29,7 @@ allprojects {
 dependencies {
     implementation(project(":tenant-api"))
     implementation(libs.spring.jpa)
-//    implementation(libs.spring.mail)
+    implementation(libs.spring.mail)
 //    implementation(libs.spring.pulsar)
     implementation(libs.spring.validation)
     implementation(libs.spring.web)
