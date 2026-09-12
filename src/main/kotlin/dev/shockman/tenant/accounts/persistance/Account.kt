@@ -22,19 +22,19 @@ import java.util.UUID
 
 @Entity
 @Table(name = "account")
-data class Account(
+class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "uuid")
-    val id: UUID? = null,
+    var id: UUID? = null,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    val createdAt: Instant? = null,
+    var createdAt: Instant? = null,
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    val updatedAt: Instant? = null,
+    var updatedAt: Instant? = null,
 
     @Version
     var version: Long = 0,
@@ -62,7 +62,7 @@ data class Account(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false)
-    val tenant: Tenant,
+    var tenant: Tenant,
 
     @Column(columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)

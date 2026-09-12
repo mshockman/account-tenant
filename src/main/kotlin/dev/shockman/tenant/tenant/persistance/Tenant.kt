@@ -16,7 +16,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "tenant")
-data class Tenant(
+class Tenant(
     @Id
     @Column(columnDefinition = "uuid")
     val id: UUID? = null,

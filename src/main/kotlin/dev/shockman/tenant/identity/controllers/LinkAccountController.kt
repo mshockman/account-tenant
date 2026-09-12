@@ -4,7 +4,6 @@ import dev.shockman.tenant.identity.application.IdentityLinkService
 import dev.shockman.tenant.identity.config.IdentityProperties
 import dev.shockman.tenant.identity.persistance.LinkRequestStatus
 import jakarta.servlet.http.HttpSession
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
