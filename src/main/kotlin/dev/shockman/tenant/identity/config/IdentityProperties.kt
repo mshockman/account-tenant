@@ -1,6 +1,7 @@
 package dev.shockman.tenant.identity.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import java.time.Duration
 
 @ConfigurationProperties(prefix = "tenant.identity")
 data class IdentityProperties(
@@ -11,4 +12,5 @@ data class IdentityProperties(
     val clientSecret: String,
     val jwksUrl: String,
     val scope: String,
+    val inviteLifespan: Duration = Duration.ofMinutes(10)
 )

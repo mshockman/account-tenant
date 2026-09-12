@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.spring.kafka)
     implementation(libs.spring.actuator)
     implementation(libs.spring.oidc)
+    implementation(libs.spring.thymeleaf)
 
     implementation(libs.jackson.kotlin)
     implementation(libs.kotlin.reflect)

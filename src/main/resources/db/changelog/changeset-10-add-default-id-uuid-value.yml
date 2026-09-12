@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-add-default-id-uuid-value
+      author: Matthew Shockman
+      changes:
+        - addDefaultValue:
+            tableName: identity
+            columnName: id
+            defaultValueComputed: uuid_generate_v4()
+            columnDataType: uuid
+        - addDefaultValue:
+            tableName: account_identity
+            columnName: id
+            defaultValueComputed: uuid_generate_v4()
+            columnDataType: uuid
+      rollback:
+        - dropDefaultValue:
+            tableName: identity
+            columnName: id
+        - dropDefaultValue:
+            tableName: account_identity
+            columnName: id

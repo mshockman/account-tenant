@@ -18,5 +18,6 @@
     <include file="db/changelog/changeset-7-identity.yml"/>
     <include file="db/changelog/changeset-8-account-identity.yml"/>
     <include file="db/changelog/changeset-9-add-unique-subject.yml"/>
+    <include file="db/changelog/changeset-10-add-default-id-uuid-value.yml"/>
 
 </databaseChangeLog>

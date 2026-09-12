@@ -10,7 +10,6 @@ import dev.shockman.tenant.identity.persistance.AccountIdentityRepository
 import dev.shockman.tenant.identity.persistance.Identity
 import dev.shockman.tenant.identity.persistance.LinkRequestStatus
 import dev.shockman.tenant.identity.persistance.LinkRequestType
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.MediaType
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -128,25 +127,25 @@ class IdentityLinkService(
     }
 
     @Transactional
-    fun linkIdentityToAccount(account: Account, idToken: Jwt): AccountIdentity {
+    fun linkIdentityToAccount(account: Account, idToken: Jwt): AccountIdentity? {
         val identity = identityService.getOrCreateIdentityFromIdToken(idToken)
 
-        return try {
-            val link = accountIdentityRepository.saveAndFlush(
-                AccountIdentity(account = account, identity = identity)
-            )
+        accountIdentityRepository.createIfAbsent(
+            accountId = requireNotNull(account.id) { "Account id is required" },
+            identityId = requireNotNull(identity.id) { "Identity id is required" }
+        )
 
-            account.identities.add(link)
-
-            link
-        } catch (e: DataIntegrityViolationException) {
-            getIdentityLinkForAccountAndIdentity(account, identity)
-                ?: throw e
-        }
+        return getIdentityLinkForAccountAndIdentity(account, identity)
     }
 
     @Transactional(readOnly = true)
     fun getIdentityLinkForAccountAndIdentity(account: Account, identity: Identity): AccountIdentity? {
         return accountIdentityRepository.findByAccountAndIdentity(account, identity)
+    }
+
+    @Transactional
+    fun accept(invite: AccountIdentityLink): AccountIdentityLink {
+        invite.status = LinkRequestStatus.ACCEPTED
+        return accountLinkRepository.save(invite)
     }
 }
