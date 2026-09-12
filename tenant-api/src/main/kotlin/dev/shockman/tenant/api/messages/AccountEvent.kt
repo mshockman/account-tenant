@@ -48,3 +48,13 @@ data class AccountDeletedEvent(
     val tenantId: UUID,
     @MessageAggregateId val accountId: UUID,
 )
+
+
+@Message(TENANT_ACCOUNT_EVENT_TOPIC, TenantServiceEvents.ACCOUNT_LINKED)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class AccountLinkEvent(
+    val realmId: UUID,
+    val tenantId: UUID,
+    @MessageAggregateId val accountId: UUID,
+    val subject: String
+)

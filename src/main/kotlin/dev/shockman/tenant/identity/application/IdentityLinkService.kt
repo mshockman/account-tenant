@@ -1,6 +1,8 @@
 package dev.shockman.tenant.identity.application
 
+import dev.shockman.messaging.message.storage.jdbc.postgres.OutboxService
 import dev.shockman.tenant.accounts.persistance.Account
+import dev.shockman.tenant.api.messages.AccountLinkEvent
 import dev.shockman.tenant.config.TenantServiceProperties
 import dev.shockman.tenant.identity.config.IdentityProperties
 import dev.shockman.tenant.identity.persistance.AccountIdentity
@@ -10,6 +12,8 @@ import dev.shockman.tenant.identity.persistance.AccountIdentityRepository
 import dev.shockman.tenant.identity.persistance.Identity
 import dev.shockman.tenant.identity.persistance.LinkRequestStatus
 import dev.shockman.tenant.identity.persistance.LinkRequestType
+import dev.shockman.tenant.realm.application.RealmService
+import io.micrometer.tracing.Tracer
 import org.springframework.http.MediaType
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -35,8 +39,9 @@ class IdentityLinkService(
     private val tenantServiceProperties: TenantServiceProperties,
     private val accountIdentityRepository: AccountIdentityRepository,
     private val mailSender: JavaMailSender,
-
-) {
+    private val outboxService: OutboxService,
+    private val tracer: Tracer
+    ) {
     private val restClient = RestClient.create()
     val redirectUri = "${tenantServiceProperties.baseUrl}/link/callback"
 
@@ -129,11 +134,25 @@ class IdentityLinkService(
     @Transactional
     fun linkIdentityToAccount(account: Account, idToken: Jwt): AccountIdentity? {
         val identity = identityService.getOrCreateIdentityFromIdToken(idToken)
+        val tenant = account.tenant
+        val realm = account.tenant.realm
 
-        accountIdentityRepository.createIfAbsent(
+        val effected = accountIdentityRepository.createIfAbsent(
             accountId = requireNotNull(account.id) { "Account id is required" },
             identityId = requireNotNull(identity.id) { "Identity id is required" }
         )
+
+        if(effected > 0) {
+            outboxService.send(
+                AccountLinkEvent(
+                    realmId = requireNotNull(realm.id),
+                    tenantId = requireNotNull(tenant.id),
+                    accountId = requireNotNull(account.id),
+                    subject = identity.subject,
+                ),
+                correlationId = tracer.currentSpan()?.context()?.traceId()
+            )
+        }
 
         return getIdentityLinkForAccountAndIdentity(account, identity)
     }
