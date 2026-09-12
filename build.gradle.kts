@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.spring.web)
     implementation(libs.spring.kafka)
     implementation(libs.spring.actuator)
+    implementation(libs.spring.oidc)
 
     implementation(libs.jackson.kotlin)
     implementation(libs.kotlin.reflect)

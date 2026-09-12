@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9-add-unique-subject
+      author: Matthew Shockman
+      changes:
+        - addUniqueConstraint:
+            tableName: identity
+            columnNames: subject
+            constraintName: uk_identity_subject
+      rollback:
+        - dropUniqueConstraint:
+            tableName: identity
+            constraintName: uk_identity_subject

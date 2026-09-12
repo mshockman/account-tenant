@@ -42,7 +42,7 @@ class RealmService(
 
         outboxService.send(
             RealmCreatedEvent(
-                realmId = realm.id,
+                realmId = requireNotNull(realm.id) { "Realm id is required" },
                 name = realm.name,
                 slug = realm.slug,
                 version = realm.version,
@@ -62,7 +62,7 @@ class RealmService(
 
         outboxService.send(
             RealmUpdatedEvent(
-                realmId = realm.id,
+                realmId = requireNotNull(realm.id) { "Realm id is required" },
                 name = realm.name,
                 slug = realm.slug,
                 version = realm.version,
@@ -80,7 +80,7 @@ class RealmService(
 
         outboxService.send(
             RealmDeletedEvent(
-                realmId = realm.id,
+                realmId = requireNotNull(realm.id) { "Realm id is required" },
             ),
             correlationId = tracer.currentSpan()?.context()?.traceId()
         )

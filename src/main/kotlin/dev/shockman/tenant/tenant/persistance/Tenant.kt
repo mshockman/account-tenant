@@ -19,7 +19,7 @@ import java.util.UUID
 data class Tenant(
     @Id
     @Column(columnDefinition = "uuid")
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
 
     @Column(nullable = false, length = 100)
     var name: String,

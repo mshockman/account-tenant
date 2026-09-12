@@ -4,8 +4,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Test Realm4",
-  "slug": "test-realm4"
+  "name": "Test Realm15",
+  "slug": "test-realm15"
 }
 
 > {%
@@ -13,7 +13,7 @@ Accept: application/json
  %}
 
 ### Get Existing Realm By Slug
-GET http://localhost:8180/realms/test-realm
+GET http://localhost:8180/realms/test-realm15
 Accept: application/json
 
 > {%

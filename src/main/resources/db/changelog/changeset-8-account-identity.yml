@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8-account-identity
+      author: Matthew Shockman
+      changes:
+        - createTable:
+            tableName: account_identity
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints: { nullable: false, unique: true, primaryKey: true }
+
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints: { nullable: false }
+
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints: { nullable: false }
+
+              - column:
+                  name: account_id
+                  type: UUID
+                  constraints: { nullable: false }
+
+              - column:
+                  name: identity_id
+                  type: UUID
+                  constraints: { nullable: false }
+        - addUniqueConstraint:
+            tableName: account_identity
+            columnNames: account_id, identity_id
+            constraintName: uk_account_identity_account_id_identity_id
+        - addForeignKeyConstraint:
+            baseTableName: account_identity
+            baseColumnNames: account_id
+            constraintName: fk_account_identity_account_id
+            referencedTableName: account
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: account_identity
+            baseColumnNames: identity_id
+            constraintName: fk_account_identity_identity_id
+            referencedTableName: identity
+            referencedColumnNames: id
+      rollback:
+        - dropTable:
+            tableName: account_identity

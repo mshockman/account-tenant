@@ -8,5 +8,7 @@ data class IdentityProperties(
     val issuer: String,
     val tokenEndpoint: String,
     val clientId: String,
-    val clientSecret: String
+    val clientSecret: String,
+    val jwksUrl: String,
+    val scope: String,
 )

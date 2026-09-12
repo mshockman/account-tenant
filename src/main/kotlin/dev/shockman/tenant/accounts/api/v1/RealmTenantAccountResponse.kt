@@ -24,10 +24,10 @@ data class RealmTenantAccountResponse(
 
 fun Account.toRealmTenantAccount(): RealmTenantAccountResponse {
     return RealmTenantAccountResponse(
-        id = id,
-        tenantId = tenant.id,
+        id = id ?: throw IllegalStateException("Account id is required"),
+        tenantId = tenant.id ?: throw IllegalStateException("Tenant id is required"),
         tenantName = tenant.name,
-        realmId = tenant.realm.id,
+        realmId = tenant.realm.id ?: throw IllegalStateException("Realm id is required"),
         realmName = tenant.realm.name,
         username = username,
         firstName = firstName,

@@ -17,13 +17,13 @@ data class TenantResponse(
 
 fun Tenant.toResponse(): TenantResponse {
     return TenantResponse(
-        id = id,
+        id = requireNotNull(id) { "id is required" },
         slug = slug,
         name = name,
         createdAt = requireNotNull(createdAt) { "created timestamp is required" },
         updatedAt = requireNotNull(updatedAt) { "updated timestamp is required" },
         enabled = enabled,
-        realmId = realm.id,
+        realmId = requireNotNull(realm.id) { "realm id is required" },
         realmName = realm.name
     )
 }

@@ -8,7 +8,7 @@ data class RealmResponse(val id: UUID, var name: String, val slug: String, val c
 
 fun Realm.toResponse(): RealmResponse {
     return RealmResponse(
-        id = id,
+        id = requireNotNull(id) { "id must not be null" },
         name = name,
         slug = slug,
         createdAt = requireNotNull(createdAt) { "createdAt must not be null" },

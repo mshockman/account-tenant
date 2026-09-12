@@ -90,7 +90,7 @@ class TenantController(
 
         return SearchRealmTenantResponse(
             tenants,
-            realm.id,
+            requireNotNull(realm.id) { "Realm id is required" },
             nextCursor?.toCursorString(objectMapper)
         )
     }

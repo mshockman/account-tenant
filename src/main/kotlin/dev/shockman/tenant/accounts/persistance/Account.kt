@@ -1,13 +1,17 @@
 package dev.shockman.tenant.accounts.persistance
 
+import dev.shockman.tenant.identity.persistance.AccountIdentity
 import dev.shockman.tenant.tenant.persistance.Tenant
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.Version
 import org.hibernate.annotations.CreationTimestamp
@@ -20,8 +24,9 @@ import java.util.UUID
 @Table(name = "account")
 data class Account(
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "uuid")
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
@@ -61,5 +66,8 @@ data class Account(
 
     @Column(columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    var attributes: Map<String, Any> = emptyMap()
+    var attributes: Map<String, Any> = emptyMap(),
+
+    @OneToMany(mappedBy = "account")
+    var identities: MutableSet<AccountIdentity> = mutableSetOf()
 )

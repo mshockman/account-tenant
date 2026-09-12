@@ -53,8 +53,8 @@ class TenantService(
 
         outboxService.send(
             TenantCreatedEvent(
-                realmId = tenant.realm.id,
-                tenantId = tenant.id,
+                realmId = requireNotNull(tenant.realm.id) { "Realm id is required" },
+                tenantId = requireNotNull(tenant.id) { "Tenant id is required" },
                 name = tenant.name,
                 slug = tenant.slug,
                 enabled = tenant.enabled,
@@ -74,8 +74,8 @@ class TenantService(
 
         outboxService.send(
             TenantDeletedEvent(
-                realmId = tenant.realm.id,
-                tenantId = tenant.id,
+                realmId = requireNotNull(tenant.realm.id) { "Realm id is required" },
+                tenantId = requireNotNull(tenant.id) { "Tenant id is required" },
             ),
             correlationId = tracer.currentSpan()?.context()?.traceId()
         )
@@ -89,8 +89,8 @@ class TenantService(
 
         outboxService.send(
             TenantUpdatedEvent(
-                realmId = newTenant.realm.id,
-                tenantId = newTenant.id,
+                realmId = requireNotNull(newTenant.realm.id) { "Realm id is required" },
+                tenantId = requireNotNull(newTenant.id) { "Tenant id is required" },
                 name = newTenant.name,
                 slug = newTenant.slug,
                 enabled = newTenant.enabled,

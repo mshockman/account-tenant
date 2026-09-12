@@ -15,5 +15,8 @@
     <include file="dev/shockman/messaging/message/storage/jdbc/postgres/liquibase/changelog/outbox/outbox.yaml"/>
 
     <include file="db/changelog/changeset-6-update-enum-names.yml"/>
+    <include file="db/changelog/changeset-7-identity.yml"/>
+    <include file="db/changelog/changeset-8-account-identity.yml"/>
+    <include file="db/changelog/changeset-9-add-unique-subject.yml"/>
 
 </databaseChangeLog>

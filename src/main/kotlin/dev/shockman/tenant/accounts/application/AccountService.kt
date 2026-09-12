@@ -60,9 +60,9 @@ class AccountService(
 
         outboxService.send(
             AccountCreatedEvent(
-                realmId = account.tenant.realm.id,
-                tenantId = account.tenant.id,
-                accountId = account.id,
+                realmId = account.tenant.realm.id ?: throw IllegalStateException("Realm id is required"),
+                tenantId = account.tenant.id ?: throw IllegalStateException("Tenant id is required"),
+                accountId = account.id ?: throw IllegalStateException("Account id is required"),
                 enabled = account.enabled,
                 firstName = account.firstName,
                 lastName = account.lastName,
@@ -92,9 +92,9 @@ class AccountService(
 
         outboxService.send(
             AccountUpdatedEvent(
-                realmId = updatedAccount.tenant.realm.id,
-                tenantId = updatedAccount.tenant.id,
-                accountId = updatedAccount.id,
+                realmId = updatedAccount.tenant.realm.id ?: throw IllegalStateException("Realm id is required"),
+                tenantId = updatedAccount.tenant.id ?: throw IllegalStateException("Tenant id is required"),
+                accountId = updatedAccount.id ?: throw IllegalStateException("Account id is required"),
                 enabled = updatedAccount.enabled,
                 firstName = updatedAccount.firstName,
                 lastName = updatedAccount.lastName,
@@ -153,9 +153,9 @@ class AccountService(
 
         outboxService.send(
             message = AccountDeletedEvent(
-                realmId = account.tenant.realm.id,
-                tenantId = account.tenant.id,
-                accountId = account.id,
+                realmId = account.tenant.realm.id ?: throw IllegalStateException("Realm id is required"),
+                tenantId = account.tenant.id ?: throw IllegalStateException("Tenant id is required"),
+                accountId = account.id ?: throw IllegalStateException("Account id is required"),
             ),
             correlationId = tracer.currentSpan()?.context()?.traceId()
         )

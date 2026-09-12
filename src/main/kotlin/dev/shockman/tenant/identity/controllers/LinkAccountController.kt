@@ -1,53 +1,23 @@
-package dev.shockman.tenant.identity.api.v1
+package dev.shockman.tenant.identity.controllers
 
-import dev.shockman.tenant.accounts.application.AccountService
-import dev.shockman.tenant.config.TenantServiceProperties
 import dev.shockman.tenant.identity.application.IdentityLinkService
 import dev.shockman.tenant.identity.config.IdentityProperties
+import dev.shockman.tenant.identity.persistance.LinkRequestStatus
 import jakarta.servlet.http.HttpSession
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.mail.javamail.JavaMailSender
-import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.util.UriComponentsBuilder
+import java.time.Instant
 import java.util.UUID
 
-@RestController
-@RequestMapping("")
-class IdentityController(
-    private val mailSender: JavaMailSender,
+class LinkAccountController(
     private val session: HttpSession,
-    private val accountService: AccountService,
     private val identityLinkService: IdentityLinkService,
     private val identityProperties: IdentityProperties,
-    private val tenantServiceProperties: TenantServiceProperties
 ) {
-    @GetMapping("/api/v1/accounts/{accountId}/invite")
-    fun inviteUser(
-        @PathVariable accountId: UUID
-    ) {
-        val account = accountService.getAccountById(accountId)
-        val invite = identityLinkService.inviteAccountEmail(account)
-
-        val message = mailSender.createMimeMessage()
-        val helper = MimeMessageHelper(message)
-
-        helper.setSubject("Link Your Account")
-        helper.setText("""
-            <h1>Link Your Account</h1>
-            <p>Click the link below to link your account to your email address.</p>
-            <a href="${tenantServiceProperties.baseUrl}/link-account?invite=${invite.id}">Link Account</a>
-        """.trimIndent(), true)
-        helper.setFrom("no-reply@example.com")
-        helper.setTo("user@example.com")
-        mailSender.send(message)
-    }
 
     @GetMapping("/link-account")
     fun linkAccount(
@@ -60,18 +30,20 @@ class IdentityController(
             "Identity link request not found"
         )
 
+        val nonce = UUID.randomUUID().toString()
+
         session.setAttribute("inviteLinkState", state)
         session.setAttribute("inviteLinkId", inviteEntity.id)
-
-        val redirectUri = "${tenantServiceProperties.baseUrl}/link/callback"
+        session.setAttribute("inviteLinkNonce", nonce)
 
         val keycloakUrl = UriComponentsBuilder
             .fromUriString(identityProperties.authUrl)
             .queryParam("client_id", identityProperties.clientId)
             .queryParam("response_type", "code")
-            .queryParam("scope", "openid")
-            .queryParam("redirect_uri", redirectUri)
+            .queryParam("scope", identityProperties.scope)
+            .queryParam("redirect_uri", identityLinkService.redirectUri)
             .queryParam("state", state)
+            .queryParam("nonce", nonce)
             .build()
             .encode()
             .toUri()
@@ -89,12 +61,25 @@ class IdentityController(
     ): ResponseEntity<Void> {
         val sessionLinkState = session.getAttribute("inviteLinkState")
         val inviteLinkId = session.getAttribute("inviteLinkId")
+        val nonce = session.getAttribute("inviteLinkNonce")
 
         if(sessionLinkState != state) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid state")
         }
 
-        val tokens = identityLinkService.exchangeForCode(code)
+        val tokens = identityLinkService.exchangeForCode(code, nonce?.toString())
+        val idToken = tokens.idToken()
+        val invite = identityLinkService.getInviteById(UUID.fromString(inviteLinkId.toString())) ?:
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid invite link")
+        val expires = invite.expires
+
+        if((expires != null && expires < Instant.now()) || invite.status != LinkRequestStatus.PENDING) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invite is expired or already used")
+        }
+
+        val account = invite.account
+
+        identityLinkService.linkIdentityToAccount(account, idToken)
 
         return ResponseEntity.ok().build()
     }

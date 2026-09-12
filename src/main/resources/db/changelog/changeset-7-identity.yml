@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7-identity
+      author: Matthew Shockman
+      changes:
+        - createTable:
+            tableName: identity
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints: { nullable: false, unique: true, primaryKey: true }
+
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints: { nullable: false }
+
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints: { nullable: false }
+
+              - column:
+                  name: username
+                  type: TEXT
+                  constraints: { nullable: true }
+
+              - column:
+                  name: subject
+                  type: TEXT
+                  constraints: { nullable: false }
+
+              - column:
+                  name: email
+                  type: TEXT
+                  constraints: { nullable: true }
+
+              - column:
+                  name: email_verified
+                  type: BOOLEAN
+                  defaultValue: "false"
+                  constraints: { nullable: false }
+
+              - column:
+                  name: phone
+                  type: TEXT
+                  constraints: { nullable: true }
+
+              - column:
+                  name: phone_verified
+                  type: BOOLEAN
+                  defaultValue: "false"
+                  constraints: { nullable: false }
+      rollback:
+        - dropTable:
+            tableName: identity
