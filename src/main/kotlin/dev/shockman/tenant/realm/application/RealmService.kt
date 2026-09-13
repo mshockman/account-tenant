@@ -19,10 +19,6 @@ class RealmService(
     private val outboxService: OutboxService,
     private val tracer: Tracer
 ) {
-    fun findBySlug(slug: String): Realm {
-        return repository.findBySlug(slug) ?: throw EntityNotFoundException("Realm with that slug not found.")
-    }
-
     fun findById(id: UUID): Realm {
         return repository.findById(id).orElseThrow { EntityNotFoundException("Realm with that id not found.") }
     }
@@ -36,7 +32,6 @@ class RealmService(
         val realm = repository.saveAndFlush(
             Realm(
                 name = createRealm.name,
-                slug = createRealm.slug
             )
         )
 
@@ -44,7 +39,6 @@ class RealmService(
             RealmCreatedEvent(
                 realmId = requireNotNull(realm.id) { "Realm id is required" },
                 name = realm.name,
-                slug = realm.slug,
                 version = realm.version,
                 createdAt = requireNotNull(realm.createdAt) { "Realm created at timestamp is null." },
                 updatedAt = requireNotNull(realm.updatedAt) { "Realm updated at timestamp is null." }
@@ -64,7 +58,6 @@ class RealmService(
             RealmUpdatedEvent(
                 realmId = requireNotNull(realm.id) { "Realm id is required" },
                 name = realm.name,
-                slug = realm.slug,
                 version = realm.version,
                 createdAt = requireNotNull(realm.createdAt) { "Realm created at timestamp is null." },
                 updatedAt = requireNotNull(realm.updatedAt) { "Realm updated at timestamp is null." }

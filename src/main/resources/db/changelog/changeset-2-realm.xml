@@ -22,9 +22,6 @@
             <column name="name" type="varchar(100)">
                 <constraints nullable="false" unique="true" />
             </column>
-            <column name="slug" type="varchar(50)">
-                <constraints nullable="false" unique="true" />
-            </column>
             <column name="invite_lifespan" type="int" defaultValue="86400">
                 <constraints nullable="false" />
             </column>

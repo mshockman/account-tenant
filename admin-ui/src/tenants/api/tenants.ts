@@ -3,7 +3,7 @@ import {apiFetch} from "../../shared/http.ts";
 
 export function getTenant(id: string) {
     return apiFetch<TenantResponse>(
-        `/api/v1/tenants/ids/${id}`,
+        `/api/v1/tenants/${id}`,
         {
             method: 'GET',
         }

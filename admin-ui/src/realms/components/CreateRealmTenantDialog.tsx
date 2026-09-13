@@ -48,15 +48,6 @@ export function CreateRealmTenantDialog({isOpen, onClose, realmId, onCreate}: Cr
                 validators: [
                     new RegExValidator(TENANT_NAME_REGEX, () => TENANT_NAME_VALIDATION_ERROR)
                 ]
-            },
-
-            slug: {
-                initial: "",
-                required: true,
-                nullable: false,
-                validators: [
-                    new RegExValidator(TENANT_SLUG_REGEX, () => TENANT_SLUG_VALIDATION_ERROR)
-                ]
             }
         }
     })
@@ -85,22 +76,6 @@ export function CreateRealmTenantDialog({isOpen, onClose, realmId, onCreate}: Cr
                                 }
                             }}
                             {...form.field("name")}
-                        />
-                    </FormControl>
-                    <FormControl fullWidth={true}>
-                        <TextField
-                            label="Slug"
-                            variant="standard"
-                            fullWidth={true}
-                            required
-                            helperText={`${form.get("slug").length}/50`}
-                            slotProps={{
-                                htmlInput: {
-                                    required: true,
-                                    maxLength: 50,
-                                }
-                            }}
-                            {...form.field("slug")}
                         />
                     </FormControl>
                 </DialogContent>

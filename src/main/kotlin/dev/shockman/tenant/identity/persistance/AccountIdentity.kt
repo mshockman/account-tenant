@@ -1,6 +1,7 @@
 package dev.shockman.tenant.identity.persistance
 
 import dev.shockman.tenant.accounts.persistance.Account
+import dev.shockman.tenant.realm.persistance.Realm
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

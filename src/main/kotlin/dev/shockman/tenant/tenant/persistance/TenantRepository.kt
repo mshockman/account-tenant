@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param
 import java.util.UUID
 
 interface TenantRepository : JpaRepository<Tenant, UUID>, JpaSpecificationExecutor<Tenant> {
-    fun findByRealmAndSlug(realm: Realm, slug: String): Tenant?
     fun findByRealmAndId(realm: Realm, id: UUID): Tenant?
 
     fun countByRealm(realm: Realm): Long

@@ -5,6 +5,8 @@ import dev.shockman.tenant.api.messages.IdentityCreatedEvent
 import dev.shockman.tenant.identity.config.IdentityProperties
 import dev.shockman.tenant.identity.persistance.Identity
 import dev.shockman.tenant.identity.persistance.IdentityRepository
+import dev.shockman.tenant.realm.persistance.Realm
+import dev.shockman.tenant.shared.uuidNotNull
 import io.micrometer.tracing.Tracer
 import jakarta.transaction.Transactional
 import org.springframework.security.oauth2.jwt.Jwt
@@ -18,7 +20,7 @@ class IdentityService(
     private val tracer: Tracer
 ) {
     @Transactional
-    fun getOrCreateIdentityFromIdToken(idToken: Jwt): Identity {
+    fun getOrCreateIdentityFromIdToken(realm: Realm, idToken: Jwt): Identity {
         val issuer = idToken.issuer?.toString() ?: throw IllegalArgumentException("Issuer is null")
         val subject = idToken.subject ?: throw IllegalArgumentException("Subject is null")
 
@@ -34,7 +36,7 @@ class IdentityService(
             ?: idToken.getClaimAsString("email")
             ?: subject
 
-        val created = identityRepository.upsert(username, subject, email, emailVerified, phone, phoneVerified)
+        val created = identityRepository.upsert(realm.id.uuidNotNull(), username, subject, email, emailVerified, phone, phoneVerified)
         val identity = identityRepository.findBySubject(subject) ?: error("Identity not found")
 
         if(created > 0) {

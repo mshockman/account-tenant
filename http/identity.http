@@ -1,5 +1,5 @@
 
 
 ### Send invit
-GET http://localhost:8180/api/v1/accounts/07c9c798-e2af-4d74-b22d-4ec909471773/invite
+GET http://localhost:8180/api/v1/accounts/0a38ba7d-f48b-445b-ab4a-908e94ba0aa0/invite
 Content-Type: application/json

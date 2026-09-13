@@ -14,7 +14,6 @@ data class TenantCreatedEvent(
     @MessageAggregateId val tenantId: UUID,
 
     val name: String,
-    val slug: String,
     val enabled: Boolean,
 
     val version: Long,
@@ -29,7 +28,6 @@ data class TenantUpdatedEvent(
     @MessageAggregateId val tenantId: UUID,
 
     val name: String,
-    val slug: String,
     val enabled: Boolean,
 
     val createdAt: Instant,

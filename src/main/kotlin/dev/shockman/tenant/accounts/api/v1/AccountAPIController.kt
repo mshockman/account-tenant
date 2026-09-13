@@ -23,13 +23,13 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/accounts")
-class AccountController(
+class AccountAPIController(
     private val tenantService: TenantService,
     private val accountService: AccountService,
     private val objectMapper: ObjectMapper,
     private val realmService: RealmService
 ) {
-    @PostMapping("/create")
+    @PostMapping("")
     fun createTenantAccount(
         @Valid @RequestBody createAccountRequest: CreateAccountRequest
     ): RealmTenantAccountResponse {
@@ -50,7 +50,7 @@ class AccountController(
         @RequestBody updateAccountRequest: UpdateAccountRequest
     ): RealmTenantAccountResponse {
         val account = accountService.getAccountById(accountId)
-        return this@AccountController.accountService.update(account, updateAccountRequest).toRealmTenantAccount()
+        return this@AccountAPIController.accountService.update(account, updateAccountRequest).toRealmTenantAccount()
     }
 
     @DeleteMapping("/{accountId}")

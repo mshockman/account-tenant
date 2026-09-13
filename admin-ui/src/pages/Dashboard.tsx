@@ -18,9 +18,7 @@ import {useNotification} from "../shared/components/notifications.tsx";
 
 
 const REALM_NAME_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\- ]{0,99}$/;
-const REALM_SLUG_REGEX = /^[a-zA-Z_][a-zA-Z0-9_\-]{0,49}$/;
 const REALM_NAME_VALIDATION_ERROR = "Realm name must be between 1 and 100 characters long and contain only letters, numbers, underscores, and dashes."
-const REALM_SLUG_VALIDATION_ERROR = "Realm slug must be between 1 and 50 characters long and start with a letter or underscore and contain only letters, numbers, underscores, and dashes."
 
 export default function Dashboard() {
     const realmsQuery = useRealms();
@@ -43,10 +41,6 @@ export default function Dashboard() {
         new RegExpValidator(REALM_NAME_VALIDATION_ERROR, REALM_NAME_REGEX),
     ])
 
-    const [realmSlug, setRealmSlug, realmSlugError] = useValidatedState<string>("", [
-        new RegExpValidator(REALM_SLUG_VALIDATION_ERROR, REALM_SLUG_REGEX),
-    ])
-
     const createRealm = useCreateRealm();
 
     const { showNotification } = useNotification();
@@ -56,7 +50,6 @@ export default function Dashboard() {
         setSaving(true);
         createRealm.mutate({
             name: realmName,
-            slug: realmSlug
         }, {
             onSuccess: () => {
                 setSaving(false);
@@ -105,19 +98,17 @@ export default function Dashboard() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Slug</TableCell>
                             <TableCell>ID</TableCell>
+                            <TableCell>Name</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredRows?.map(realm => (
                             <TableRow key={realm.id}>
+                                <TableCell>{realm.id}</TableCell>
                                 <TableCell>
                                     <Link component={RouterLink} to={`/realms/${realm.id}`}>{realm.name}</Link>
                                 </TableCell>
-                                <TableCell>{realm.slug}</TableCell>
-                                <TableCell>{realm.id}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -145,26 +136,6 @@ export default function Dashboard() {
                                         required: true,
                                         maxLength: 100,
                                     }
-                                }}
-                            />
-                        </Box>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, marginBottom: 2 }}>
-                            <FormLabel>*Realm Slug:</FormLabel>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                fullWidth
-                                value={realmSlug}
-                                error={!!realmSlugError}
-                                helperText={realmSlugError || `${realmSlug.length}/50`}
-                                slotProps={{
-                                    htmlInput: {
-                                        required: true,
-                                        maxLength: 50,
-                                    }
-                                }}
-                                onChange={(e) => {
-                                    setRealmSlug(e.target.value as string)
                                 }}
                             />
                         </Box>

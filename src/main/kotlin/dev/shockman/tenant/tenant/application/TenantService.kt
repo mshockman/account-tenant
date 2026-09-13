@@ -28,10 +28,6 @@ class TenantService(
         return tenantRepository.findByRealmAndId(realm, id) ?: throw EntityNotFoundException("Tenant not found")
     }
 
-    fun findByRealmAndSlug(realm: Realm, slug: String): Tenant {
-        return tenantRepository.findByRealmAndSlug(realm, slug) ?: throw EntityNotFoundException("Tenant not found.")
-    }
-
     fun findById(id: UUID): Tenant {
         return tenantRepository.findById(id).orElseThrow { EntityNotFoundException("Tenant not found.") }
     }
@@ -44,7 +40,6 @@ class TenantService(
     fun create(realm: Realm, createdTenant: CreateTenantRequest): Tenant {
         val tenant = tenantRepository.saveAndFlush(
             Tenant(
-                slug = createdTenant.slug,
                 name = createdTenant.name,
                 realm = realm,
                 enabled = createdTenant.enabled
@@ -56,7 +51,6 @@ class TenantService(
                 realmId = requireNotNull(tenant.realm.id) { "Realm id is required" },
                 tenantId = requireNotNull(tenant.id) { "Tenant id is required" },
                 name = tenant.name,
-                slug = tenant.slug,
                 enabled = tenant.enabled,
                 version = tenant.version,
                 createdAt = requireNotNull(tenant.createdAt) { "Tenant created at timestamp is null." },
@@ -92,7 +86,6 @@ class TenantService(
                 realmId = requireNotNull(newTenant.realm.id) { "Realm id is required" },
                 tenantId = requireNotNull(newTenant.id) { "Tenant id is required" },
                 name = newTenant.name,
-                slug = newTenant.slug,
                 enabled = newTenant.enabled,
                 version = newTenant.version,
                 createdAt = requireNotNull(newTenant.createdAt) { "Tenant created at timestamp is null." },

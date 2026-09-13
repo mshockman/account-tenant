@@ -29,7 +29,6 @@ object TenantFilterSpecification {
         return Specification { root, _, cb ->
             val predicates = mutableListOf<Predicate>(
                 cb.like(cb.lower(root.get("name")), likeValue),
-                cb.like(cb.lower(root.get("slug")), likeValue),
             )
 
             if(parsedId != null) {

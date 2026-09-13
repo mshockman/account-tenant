@@ -83,7 +83,6 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
                 <Link component={RouterLink} to={`/realms/tenants/${item.id}`}>{item.id}</Link>
             </TableCell>
             <TableCell>{item.name}</TableCell>
-            <TableCell>{item.slug}</TableCell>
         </TableRow>
     )) ?? [];
 
@@ -122,7 +121,6 @@ export default function RealmTenants({realmId, query=null, cursor=null, limit=10
                         <TableRow>
                             <TableCell>ID</TableCell>
                             <TableCell>Name</TableCell>
-                            <TableCell>Slug</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

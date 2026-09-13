@@ -36,12 +36,11 @@ export function getRealms(): Promise<Realm[]> {
 
 export type CreateRealmRequest = {
     name: string;
-    slug: string;
 }
 
 export function createRealm(request: CreateRealmRequest) {
     return apiFetch<Realm>(
-        `/api/v1/realms/create`,
+        `/api/v1/realms`,
         {
             method: 'POST',
             body: JSON.stringify(request),
@@ -51,7 +50,7 @@ export function createRealm(request: CreateRealmRequest) {
 
 export function getRealm(id: string) {
     return apiFetch<Realm>(
-        `/api/v1/realms/ids/${id}`
+        `/api/v1/realms/${id}`
     )
 }
 
@@ -86,7 +85,7 @@ export interface RealmTenantResponse {
 
 export function createRealmTenant(request: CreateRealmTenantRequest): Promise<RealmTenantResponse>  {
     return apiFetch(
-        "/api/v1/tenants/create",
+        "/api/v1/tenants",
         {
             method: 'POST',
             body: JSON.stringify(request),
@@ -116,7 +115,7 @@ export function updateRealm(request: UpdateRealmRequest): Promise<Realm> {
     const {id, ...rest} = request;
 
     return apiFetch<Realm>(
-        `/api/v1/realms/ids/${id}`,
+        `/api/v1/realms/${id}`,
         {
             method: 'PATCH',
             body: JSON.stringify(rest),

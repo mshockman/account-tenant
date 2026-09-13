@@ -30,7 +30,7 @@ export interface CreateAccountRequest {
 
 export function createAccount(request: CreateAccountRequest) {
     return apiFetch<Account>(
-        `/api/v1/accounts/create`,
+        `/api/v1/accounts`,
         {
             method: 'POST',
             body: JSON.stringify(request),

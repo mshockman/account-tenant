@@ -12,7 +12,6 @@ data class RealmCreatedEvent(
     @MessageAggregateId val realmId: UUID,
 
     val name: String,
-    val slug: String,
 
     val version: Long,
     val createdAt: Instant,
@@ -24,8 +23,6 @@ data class RealmCreatedEvent(
 data class RealmUpdatedEvent(
     @MessageAggregateId val realmId: UUID,
     val name: String,
-    val slug: String,
-
     val version: Long,
     val createdAt: Instant,
     val updatedAt: Instant,

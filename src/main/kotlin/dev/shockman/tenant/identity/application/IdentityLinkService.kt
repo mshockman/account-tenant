@@ -43,7 +43,7 @@ class IdentityLinkService(
     private val tracer: Tracer
     ) {
     private val restClient = RestClient.create()
-    val redirectUri = "${tenantServiceProperties.baseUrl}/link/callback"
+    val redirectUri = "${tenantServiceProperties.baseUrl}/identity/callback"
 
     @Transactional
     fun inviteAccountEmail(account: Account): AccountIdentityLink {
@@ -60,7 +60,7 @@ class IdentityLinkService(
         helper.setText("""
             <h1>Link Your Account</h1>
             <p>Click the link below to link your account to your email address.</p>
-            <a href="${tenantServiceProperties.baseUrl}/link-account?invite=${invite.id}">Link Account</a>
+            <a href="${tenantServiceProperties.baseUrl}/identity/link?invite=${invite.id}">Link Account</a>
         """.trimIndent(), true)
         helper.setFrom("no-reply@example.com")
         helper.setTo("user@example.com")
@@ -133,9 +133,9 @@ class IdentityLinkService(
 
     @Transactional
     fun linkIdentityToAccount(account: Account, idToken: Jwt): AccountIdentity? {
-        val identity = identityService.getOrCreateIdentityFromIdToken(idToken)
-        val tenant = account.tenant
         val realm = account.tenant.realm
+        val identity = identityService.getOrCreateIdentityFromIdToken(realm, idToken)
+        val tenant = account.tenant
 
         val effected = accountIdentityRepository.createIfAbsent(
             accountId = requireNotNull(account.id) { "Account id is required" },

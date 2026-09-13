@@ -9,6 +9,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: UUID
+                  defaultValueComputed: uuid_generate_v4()
                   constraints: { nullable: false, unique: true, primaryKey: true }
 
               - column:
@@ -21,6 +22,11 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamptz
                   defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints: { nullable: false }
+
+              - column:
+                  name: realm_id
+                  type: UUID
                   constraints: { nullable: false }
 
               - column:
@@ -54,6 +60,10 @@ databaseChangeLog:
                   type: BOOLEAN
                   defaultValue: "false"
                   constraints: { nullable: false }
+        - addUniqueConstraint:
+            tableName: identity
+            columnNames: realm_id, subject
+            constraintName: identity_realm_id_subject_unique
       rollback:
         - dropTable:
             tableName: identity

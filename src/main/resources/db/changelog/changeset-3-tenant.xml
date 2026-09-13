@@ -28,9 +28,6 @@
             <column name="name" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-            <column name="slug" type="varchar(50)">
-                <constraints nullable="false" />
-            </column>
             <column name="invite_lifespan" type="int">
                 <constraints nullable="true" />
             </column>
@@ -40,7 +37,6 @@
                                  referencedColumnNames="id" onDelete="CASCADE" />
 
         <addUniqueConstraint tableName="tenant" columnNames="realm_id, name" constraintName="uq_tenant_realm_name" />
-        <addUniqueConstraint tableName="tenant" columnNames="realm_id, slug" constraintName="uq_tenant_realm_slug" />
 
         <sql>
             CREATE TRIGGER updated_at_now BEFORE UPDATE ON "tenant" FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
@@ -48,7 +44,6 @@
 
         <rollback>
             <dropUniqueConstraint tableName="tenant" constraintName="uq_tenant_realm_name" />
-            <dropUniqueConstraint tableName="tenant" constraintName="uq_tenant_realm_slug" />
             <dropForeignKeyConstraint baseTableName="tenant" constraintName="fk_tenant_realm" />
             <dropTable tableName="tenant" />
         </rollback>

@@ -6,7 +6,6 @@ import java.util.UUID
 
 data class TenantResponse(
     val id: UUID,
-    val slug: String,
     val name: String,
     val createdAt: Instant,
     val updatedAt: Instant,
@@ -18,7 +17,6 @@ data class TenantResponse(
 fun Tenant.toResponse(): TenantResponse {
     return TenantResponse(
         id = requireNotNull(id) { "id is required" },
-        slug = slug,
         name = name,
         createdAt = requireNotNull(createdAt) { "created timestamp is required" },
         updatedAt = requireNotNull(updatedAt) { "updated timestamp is required" },

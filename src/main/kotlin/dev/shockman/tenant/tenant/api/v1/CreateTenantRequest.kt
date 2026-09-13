@@ -4,7 +4,6 @@ import java.util.UUID
 
 data class CreateTenantRequest(
     val realmId: UUID,
-    val slug: String,
     val name: String,
     val enabled: Boolean = true,
 )

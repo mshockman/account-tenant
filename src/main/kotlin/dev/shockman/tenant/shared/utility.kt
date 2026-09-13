@@ -13,3 +13,5 @@ fun String.toUUIDOrNull(): UUID? {
         null
     }
 }
+
+fun UUID?.uuidNotNull(): UUID = requireNotNull(this) { "UUID must not be null" }

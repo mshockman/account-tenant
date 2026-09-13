@@ -4,8 +4,5 @@ import jakarta.validation.constraints.Size
 
 data class CreateRealmRequest(
     @field:Size(min=1, max=100)
-    val name: String,
-
-    @field:Size(min=1, max=50)
-    val slug: String
+    val name: String
 )

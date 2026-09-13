@@ -17,21 +17,21 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/v1/realms")
 class RealmController(val realmService: RealmService) {
-    @GetMapping("/ids/{id}")
+    @GetMapping("/{id}")
     fun getRealm(
         @PathVariable id: UUID
     ): RealmResponse {
         return realmService.findById(id).toResponse()
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     fun createNewRealm(
         @RequestBody realm: CreateRealmRequest
     ): RealmResponse {
         return realmService.create(realm).toResponse()
     }
 
-    @DeleteMapping("/ids/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteRealm(
         @PathVariable id: UUID
@@ -46,7 +46,7 @@ class RealmController(val realmService: RealmService) {
         return realmService.findAll().map { it.toResponse() }
     }
 
-    @PatchMapping("/ids/{id}")
+    @PatchMapping("/{id}")
     fun patchRealm(
         @PathVariable id: UUID,
         @RequestBody updateRequest: UpdateRealmRequest
@@ -54,7 +54,6 @@ class RealmController(val realmService: RealmService) {
         val realm = realmService.findById(id)
 
         realm.name = updateRequest.name
-        realm.slug = updateRequest.slug
 
         return realmService.updateRealm(realm).toResponse()
     }

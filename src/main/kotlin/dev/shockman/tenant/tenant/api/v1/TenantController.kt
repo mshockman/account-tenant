@@ -24,7 +24,7 @@ class TenantController(
     private val realmService: RealmService,
     private val objectMapper: ObjectMapper
 ) {
-    @PostMapping("/create")
+    @PostMapping("")
     fun createTenant(
         @RequestBody tenant: CreateTenantRequest
     ): TenantResponse {
@@ -33,7 +33,7 @@ class TenantController(
         return tenantService.create(realm, tenant).toResponse()
     }
 
-    @GetMapping("/ids/{id}")
+    @GetMapping("/{id}")
     fun getTenant(
         @PathVariable id: UUID,
     ): TenantResponse {

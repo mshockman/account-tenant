@@ -28,15 +28,6 @@ export function TenantEditor(
                 validators: [
                     new RegExValidator(TENANT_NAME_REGEX, () => TENANT_NAME_VALIDATION_ERROR)
                 ]
-            },
-
-            slug: {
-                initial: tenant.slug,
-                required: true,
-                nullable: false,
-                validators: [
-                    new RegExValidator(TENANT_SLUG_REGEX, () => TENANT_SLUG_VALIDATION_ERROR)
-                ]
             }
         }
     })
@@ -55,9 +46,6 @@ export function TenantEditor(
             </Box>
             <Box>
                 <TextField fullWidth={true} label="Name" {...form.field("name")} {...slotProps(100, true)} />
-            </Box>
-            <Box>
-                <TextField fullWidth={true} label="Slug" {...form.field("slug")} {...slotProps(50, true)} />
             </Box>
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 {/*<Button type="submit" variant="contained" sx={{marginRight: 1}} onClick={() => form.reset()}>Reset</Button>*/}
